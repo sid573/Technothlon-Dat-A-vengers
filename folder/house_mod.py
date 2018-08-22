@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense,Activation
 from sklearn.linear_model import LinearRegression
+import missingno as msno
 
 def load_data():
 	""" Creating the DataFrames """
@@ -108,5 +109,49 @@ def convert_to_csv(df,Y_test,test = False):
 		df.drop('Id',axis=1)
 		test = pd.DataFrame({'Id':passenger_id,'SalePrice':Y_test})
 		test.to_csv('test_mod.csv',index = False)
+## sid work
+def line(x , credit):
+	line = 50 
+	credit = credit - line 
+	return h_train[x].plot(kind = 'line')
 
-	
+def hist(x , credit):
+	hist = 50 
+	credit = credit - hist 
+	return h_train[x].plot(kind = 'hist')
+
+def bar(x , credit):
+	bar = 50 
+	credit = credit - bar 
+	return h_train[x].plot(kind = 'bar')
+
+ # for missing number analysis
+
+ def matrix(x , credit):
+ 	matrix = 100
+ 	credit = credit - matrix
+ 	return msno.matrix(h_train.sample(250))
+
+ def heatmap(x , credit):
+ 	heatmap = 100
+ 	credit = credit - heatmap
+ 	return msno.heatmap(h_train.sample(250))	
+
+ def dendrogram(x , credit):
+ 	dendrogram = 100
+ 	credit = credit - dendrogram
+ 	return msno.dendrogram(h_train.sample(250))
+
+
+# using matplotlib.pyplot
+
+ 	
+
+# Normalization Functions
+
+def Normalization():
+	Normalization = 100
+	credit = credit - Normalization
+	return h_train[x]=(h_train[x]-h_train[x].mean())/h_train[x].std()
+
+		
