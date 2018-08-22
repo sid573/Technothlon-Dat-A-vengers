@@ -1,37 +1,99 @@
 import numpy as np
 import pandas as pd
 import house_mod as hd
+import matplotlib.pyplot as plt
 
-df,df_test = hd.load_data();
-print(df.shape);
-print(df_test.shape)
+credits = 100000
+model_counter = 0
 
-hd.see_null(df)
-hd.see_null(df_test)
+# Initially 300 Data
+df = hd.load_data_init_train()
+df_test = hd.load_data_test()
+print(df.shape)
 
-nan_col = []
-nan_col_test = []
-df,nan_col = hd.string_to_val(df,list_cols=['Alley','Street','Utilities','LandSlope','Condition2','RoofMatl','BsmtQual','BsmtCond','BsmtFinSF2','Heating','GarageYrBlt','GarageFinish','GarageQual','PoolArea','PoolQC','MiscFeature','YrSold','SaleType','MSZoning','LotShape','LandContour','LotConfig','Neighborhood','Condition1','BldgType','HouseStyle','Exterior1st','Exterior2nd','ExterQual','ExterCond','Foundation','BsmtExposure','BsmtFinType1','BsmtFinType2','HeatingQC','CentralAir','Electrical','KitchenQual','Functional','FireplaceQu','GarageType','GarageCond','PavedDrive','Fence','SaleCondition','RoofStyle','MasVnrType'])
-df_test,nan_col_test = hd.string_to_val(df,list_cols=['Alley','Street','Utilities','LandSlope','Condition2','RoofMatl','BsmtQual','BsmtCond','BsmtFinSF2','Heating','GarageYrBlt','GarageFinish','GarageQual','PoolArea','PoolQC','MiscFeature','YrSold','SaleType','MSZoning','LotShape','LandContour','LotConfig','Neighborhood','Condition1','BldgType','HouseStyle','Exterior1st','Exterior2nd','ExterQual','ExterCond','Foundation','BsmtExposure','BsmtFinType1','BsmtFinType2','HeatingQC','CentralAir','Electrical','KitchenQual','Functional','FireplaceQu','GarageType','GarageCond','PavedDrive','Fence','SaleCondition','RoofStyle','MasVnrType'])
+def append_data():
+	# Appending the Data
+	extra_data,credits = hd.load_data_in(300,400,credits)
+	df = df.append(extra_data)
+	return df,credits
 
-df_test = hd.str_null(df_test,nan_col_test)
-df = hd.str_null(df,nan_col)
+def check_null(df,input_val,credits,col_name = None):
+	""" Which Null to call """
+	if(input_val == 1):
+		credits = hd.see_null_each(df,credits)
+	elif(input_val == 2):
+		credits = hd.null_sum(df,col_name,credits)
+	else:
+		credits = hd.null_any(df,credits)
+	return credits
 
-print(df.head(5))
+def normalization(df,input_val,credits,col_name	= None):
+	""" Which Normalization to call """
+	if(input_val == 1):
+		df,credits = hd.better_normalization(df,col_name,credits)
+	elif(input_val == 2):
+		df,credits = hd.mean_normalization(df,col_name,credits)
+	else:
+		df,credits = hd.std_normalization(df,col_name,credits)
+	return df,credits
 
-df = hd.fill_null(df)
-df_test = hd.fill_null(df_test)
+def draw_graph(df,credits,input_val,col_name = None):
+	""" Which Graph """
+	if(input_val == 1):
+		pl,credits = hd.line(df,credits,col_name)
+	else:
+		pl,credits = hd.histogram(df,credits)
 
-X_train,Y_train = hd.convert_to_matrix(df,test = False)
-X_test = hd.convert_to_matrix(df_test,test = True)
+	plt.show()
+	return credits
 
-print(str(X_test.shape))
-print(str(X_train.shape))
-print(str(Y_train.shape))
 
-Y_test = hd.Model(X_train,Y_train,X_test)
-print(str(Y_test.shape))
+def null_graph(df,credits,input_val):
+	""" Which Missing No Grpah to Call """
+	# Graphs are Sexy but are not very Sizzling Hot #
+	if(input_val == 1):
+		pl,credits = hd.matrix(df,credits)
+	elif(input_val == 2):
+		pl,credits = hd.heatmap(df,credits)
+	elif(input_val == 3):
+		pl,credits = hd.dendrogram(df,credits)
+	else:
+		pl,credits = hd.bar(df,credits)
+	
+	plt.show()
+	return credits
 
-hd.convert_to_csv(df,Y_test,test = False)
-hd.convert_to_csv(df_test,Y_test,test = True)
+def fill_null(df,credits,input_val,col_name):
+	""" Which null filler to call """
+	if(input_val == 1):
+		df,credits = hd.mean_null(df,credits,col_name)
+	elif(input_val == 2):
+		df,credits = hd.zero_null(df,credits,col_name)
+	else:
+		df,credits = hd.std_null(df,credits,col_name)
+
+	return df,credits
+
+def drop(df,credits,input_val,col_name = None,row_index = None):
+	""" What to drop? """
+	if(input_val == 1):
+		df,credits = hd.drop_columns(df,credits,col_name)
+	else:
+		df,credits = hd.drop_rows(df,credits,row_index)
+
+	return df,credits
+
+def model_type(model_name,X_train,Y_train,X_test,credits):
+	""" Which Model to call """
+	model_counter+=1
+	if(model_counter < 2):
+		Y_test = hd.Model(X_train,Y_train,X_test)
+	else:
+		if(model_name == 'linear'):
+			credits -= 3000
+			Y_test = hd.Model(X_train,Y_train,X_test)
+
+	return Y_test,credits
+
+		
 
