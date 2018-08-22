@@ -68,15 +68,15 @@ while(True):
 		input_val = int(input("Enter the Value\n"))
 		if(input_val == 2):
 			col = input("Enter the Column Name\n")
-			credits = check_null(df,input_val,credits,col_name = col)
+			credits = mn.check_null(df,input_val,credits,col_name = col)
 		else:
-			credits = check_null(df,input_val,credits)
+			credits = mn.check_null(df,input_val,credits)
 
 		print("Available Credits are " + credits)
 		print()
 
 	elif(str_val == 3):
-			
+
 
 	
 
