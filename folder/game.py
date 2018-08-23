@@ -9,7 +9,9 @@ print("The dataset with 300 entries will be loaded")
 df = hd.load_data_init_train()
 df_test = hd.load_data_test()
 print(df.shape)
-
+true_pred = df_test[['Id','SalePrice']]
+true_pred = true_pred.values
+print(true_pred.shape)
 print("Dataset is Loaded")
 input("Press to continue")
 print()
@@ -29,7 +31,7 @@ while(True):
 	print("Use it Wisely....")
 	print()
 	print("Here's the List of Options Available for you")
-	print()
+	print()	
 	
 	print("WARNING!!!! WARNING!!!! WARNING!!!!")
 	print("Whenever you make a change to the DataFrame Never Forget to convert it to a Numpy Array")
@@ -52,9 +54,9 @@ while(True):
 	str_val = int(input("Enter your Choice\n"))
 	
 	if(str_val == 1):
-		low = int(input("Enter Lower Range which should be obviously greater then 300 or any previous value you have entered"))
-		high = int(input("Enter Higher Range which you need....Remember it Costs Credits"))
-		df,credits = mn.append_data(low,high,credits)
+		low = int(input("Enter Lower Range which should be obviously greater then 300 or any previous value you have entered "))
+		high = int(input("Enter Higher Range which you need....Remember it Costs Credits "))
+		df,credits = mn.append_data(df,low,high,credits)
 		print("Added" + (high - low) + "Datas")
 		print("Shape of Train DataFrame = " + str(df.shape))
 		print()
@@ -123,6 +125,7 @@ while(True):
 		print("3 - Standard Deviation")
 		print()
 		input_val = int(input("Enter the Value\n"))
+		col_name = input("Enter the Column Name\n")
 		df,credits = mn.fill_null(df,credits,input_val,col_name)
 
 		print("Your Available Credits are " + str(credits))
@@ -143,10 +146,12 @@ while(True):
 	elif(str_val == 8):
 		print("Options Available")
 		print()
-		print("1 - Linear Regression")
+		print("linear - Linear Regression")
+		print("ridge - Ridge Regression")
+		print("lasso - Lasso Regression")
 		print()
-		#input_val = int(input("Enter the Value\n"))
-		Y_test,credits = mn.model_type('linear',X_train,Y_train,X_test,credits)
+		input_val = (input("Enter the Value\n"))
+		Y_test,credits = mn.model_type(input_val,X_train,Y_train,X_test,credits)
 
 		print("Your Available Credits are " + str(credits))
 		print()
@@ -156,7 +161,8 @@ while(True):
 		X_test = df.convert_to_matrix(df_test,test = True)
 		print("Shape of X_train, Y_train and X_test are " + str(X_train) + str(Y_train) + str(X_test))
 		print()
-	
+
+
 	# NEED TO ADD PREDICT FUCNTION AND ORIGINAL DATASET
 	print("Well! Do you want to Continue")
 	continue_str = input("Enter [y/n]\n")
@@ -167,5 +173,11 @@ while(True):
 		print("Enjoy other events for the day and HAVE FUN!!!!")
 		break;
 
+
+print("Credits Remaining are : " + credits)
+print()
+acc = mn.accuracy(Y_test,true_pred)
+print("Test Accuracy is " + acc)
+print()
 print("Good Bye!!!")
 input("Press B to bid us a goodbye!!!")
