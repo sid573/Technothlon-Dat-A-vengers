@@ -2,10 +2,11 @@ import numpy as np
 import pandas as pd
 import house_mod as hd
 import matplotlib.pyplot as plt
-
+from sklearn import metrics
 credits = 100000
 model_counter = 0
 
+<<<<<<< HEAD
 # Initially 300 Data
 df = hd.load_data_init_train()
 df_test = hd.load_data_test()
@@ -15,6 +16,11 @@ def append_data(x1 , x2 , credits):
 	# Appending the Data
 	extra_data,credits = hd.load_data_in_train(x1,x2,credits)
 	global df
+=======
+def append_data(df,low,high,credits):
+	# Appending the Data
+	extra_data,credits = hd.load_data_in_train(low,high,credits)
+>>>>>>> 2615707ca4ff13d088a0c92e9e2e4ecb011493d5
 	df = df.append(extra_data)
 	return df,credits
 
@@ -31,7 +37,7 @@ def check_null(df,input_val,credits,col_name = None):
 def normalization(df,input_val,credits,col_name	= None):
 	""" Which Normalization to call """
 	if(input_val == 1):
-		df,credits = hd.better_normalization(df,col_name,credits)
+		df,credits = hd.both_normalization(df,col_name,credits)
 	elif(input_val == 2):
 		df,credits = hd.mean_normalization(df,col_name,credits)
 	else:
@@ -78,10 +84,17 @@ def fill_null(df,credits,input_val,col_name):
 def drop(df,credits,input_val):
 	""" What to drop? """
 	if(input_val == 1):
+<<<<<<< HEAD
 		col_name = input("Enter Column Name\n")
 		df,credits = hd.drop_columns(df,credits,col_name)
 	else:
 		row_index = int(input("Enter Row Name\n"))
+=======
+		col_name = input("Enter Column name to Drop")
+		df,credits = hd.drop_columns(df,credits,col_name)
+	else:
+		row_index = input("Enter Row Index to drop")
+>>>>>>> 2615707ca4ff13d088a0c92e9e2e4ecb011493d5
 		df,credits = hd.drop_rows(df,credits,row_index)
 
 	return df,credits
@@ -101,6 +114,7 @@ def model_type(model_name,X_train,Y_train,X_test,credits):
 		elif(model_name == 'lasso'):
 			credits -= 5000
 			Y_test = hd.Model_Lasso(X_train,Y_train,X_test)
+<<<<<<< HEAD
 
 return Y_test,credits
 
@@ -108,7 +122,12 @@ def accuracy(Y_test,true_pred):
 	""" Accuracy """
 	val = metrics.accuracy_score(Y_test,true_pred)
 	return val * 100
+=======
+>>>>>>> 2615707ca4ff13d088a0c92e9e2e4ecb011493d5
 
 
-		
+def accuracy(Y_test,true_pred):
+	""" Accuracy """
+	val = metrics.accuracy_score(Y_test,true_pred)
+	return val * 100
 
