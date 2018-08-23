@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense,Activation
 from sklearn.linear_model import LinearRegression
+from sklearn import linear_model
 import missingno as msno
 
 
@@ -11,13 +12,13 @@ import missingno as msno
 
 def load_data_init_train():
 	""" Creating the DataFrames """
-	df = pd.read_csv("train.csv")
+	df = pd.read_csv("train_mod.csv")
 	df = pd.DataFrame(df)
 	return df[0:300]
 
 def load_data_in_train(x1,x2,credits):
 	""" Creating Dataframes with credits change """
-	df = pd.read_csv("train.csv")
+	df = pd.read_csv("train_mod.csv")
 	df = pd.DataFrame(df)
 	if(x2 >= 1001):
 		print("Dont cross your limits!!")
@@ -32,7 +33,7 @@ def load_data_in_train(x1,x2,credits):
 
 def load_data_test():
 	""" Test Loading Initially """
-	df = pd.read_csv("train.csv")
+	df = pd.read_csv("train_mod.csv")
 	df = pd.DataFrame(df)
 	return df[1000:]
 
@@ -41,7 +42,7 @@ def load_data_test():
 ############# NULLITY CHECK ######################
 
 def see_null_each(df,credits):
-	"""Nullity check """
+	"""Shows Cols with Null"""
 	print(df.isna().any())
 	credits -= 100
 	return credits
@@ -199,7 +200,7 @@ def std_null(df,credits,col_name):
 def convert_to_matrix(df,test=False):
 	""" X_train and X_test """
 	# Creating the Training and Test Set
-	X = df.loc[:,df.columns!='SalePrice'] #Locates and Allocate all cols except last one
+	X = df.loc[:,df.columns!=['SalePrice','Id']] #Locates and Allocate all cols except last one
 	
 	# Convert to Numpy Array
 	X = X.values 
@@ -215,10 +216,38 @@ def convert_to_matrix(df,test=False):
 
 ################## Model ############################
 	
-def Model(X_train,Y_train,X_test):
-	""" Model """
+def Model_Linear(X_train,Y_train,X_test):
 	lm = LinearRegression()
 	model = lm.fit(X_train,Y_train)
+	Y_test = model.predict(X_test)
+	Y_test = Y_test.flatten()
+	plt.plot(model.history['acc'])
+	plt.plot(model.history['val_acc'])
+	plt.title('Model accuracy')
+	plt.ylabel('Accuracy')
+	plt.xlabel('epoch')
+	plt.legend(['train', 'test'], loc='upper left')
+	plt.show()
+	# summarize history for loss
+	plt.plot(history.history['loss'])
+	plt.plot(history.history['val_loss'])
+	plt.title('model loss')
+	plt.ylabel('loss')
+	plt.xlabel('epoch')
+	plt.legend(['train', 'test'], loc='upper left')
+	plt.show()
+	return Y_test
+
+def Model_Rigid(X_train,Y_train,X_test):
+	reg = linear_model.Ridge (alpha = .5)
+	model = reg.fit(X_train,Y_train)
+	Y_test = model.predict(X_test)
+	Y_test = Y_test.flatten()
+	return Y_test
+
+def Model_Lasso(X_train,Y_train,X_test):
+	reg = linear_model.Lasso(alpha = 0.1)
+	model = reg.fit(X_train,Y_train)
 	Y_test = model.predict(X_test)
 	Y_test = Y_test.flatten()
 	return Y_test
