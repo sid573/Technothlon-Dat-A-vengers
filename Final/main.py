@@ -94,15 +94,15 @@ def model_type(model_name,X_train,Y_train,X_test,credits,model_counter):
 	else:
 		if(model_name == 'linear'):
 			credits -= 3000
-			Y_test = hd.Model_Linear(X_train,Y_train,X_test)
+			Y_test,train_y = hd.Model_Linear(X_train,Y_train,X_test)
 		elif(model_name == 'ridge'):
 			credits -= 5000
-			Y_test = hd.Model_Ridge(X_train,Y_train,X_test)
+			Y_test,train_y = hd.Model_Ridge(X_train,Y_train,X_test)
 		elif(model_name == 'lasso'):
 			credits -= 5000
-			Y_test = hd.Model_Lasso(X_train,Y_train,X_test)
+			Y_test,train_y = hd.Model_Lasso(X_train,Y_train,X_test)
 
-	return Y_test,credits
+	return Y_test,train_y,credits
 
 def accuracy(Y_test,true_pred):
 	""" Accuracy """
