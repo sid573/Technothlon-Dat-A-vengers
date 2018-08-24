@@ -47,7 +47,9 @@ while(True):
 	print("6 - Fill Null Values")
 	print("7 - Drop Values")
 	print("8 - Choose a Model to Train")
-	print("9 - Make a Numpy Array of the DataFrame (Use it After you make any change to DataFrame)")
+	print("9 - Make a Numpy Array of the DataFrame (Use it After you make any change to DataFrame and before training for the model)")
+	print("10 - Predict the Values (Do it when you have Trained your Model)")
+	print("11 - Shows the Dataset (specific elements)")
 	print()
 
 	str_val = int(input("Enter your Choice\n"))
@@ -148,6 +150,16 @@ while(True):
 		print()
 
 	elif(str_val == 8):
+		print("You will train your model now, Did you change your DataFrame to a Numpy Array!!")
+		print()
+		print("Do it by pressing 9")
+		check_model_str = input("Are we good to go?\n")
+
+		if(check_model_str == 'n' or check_model_str == 'N'):
+			print("We are returning back then!! Next time be Careful")
+			continue
+
+		
 		print("Options Available")
 		print()
 		print("linear - Linear Regression")
@@ -166,11 +178,35 @@ while(True):
 		X_test = df.convert_to_matrix(df_test,test = True)
 		print("Shape of X_train, Y_train and X_test are " + str(X_train) + str(Y_train) + str(X_test))
 		print()
-	
+
+	elif(str_val == 10):
+		print("Are u Sure you have trained the Model and got your Predictions")
+		check_pred_str = input("So you want to continue\n")
+		
+		if(check_pred_str == 'n' or check_pred_str == 'N'):
+			print("Revert back then")
+			continue
+
+		pred_val = mn.accuracy(Y_test,true_pred)
+		print("Your Prediction Value is " + str(pred_val))
+		print()
+
+	elif(str_val == 11):
+		print("Options Available")
+		print()
+		print("1 - Shows a Column")
+		print("2 - Shows a Row")
+		print("3 - Shows the Dataset (The Range you select will decrease credits)")
+		print()
+		head_str = input("Enter your Choice\n")
+		credits = mn.show_data(df,credits,head_str)
+		print()
+
 	# NEED TO ADD PREDICT FUCNTION AND ORIGINAL DATASET
 	print("Well! Do you want to Continue")
 	continue_str = input("Enter [y/n]\n")
 	if(continue_str == 'y'):
+		input_val = None
 		continue
 	else:
 		print("So here we are at the end of the Game")

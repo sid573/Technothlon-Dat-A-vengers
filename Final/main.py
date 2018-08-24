@@ -110,5 +110,20 @@ def accuracy(Y_test,true_pred):
 	return val * 100
 
 
-		
+def show_data(df,credits,input_val):
+	""" Shows Parts of Data """
+	if(input_val == 1):
+		col_name = input("Enter Column Name\n")
+		print(df[col_name])
+		credits -= 1000
+	elif(input_val == 2):
+		row_index = int(input("Enter Row Index\n"))
+		print(df.iloc[row_index])
+		credits -= 100
+	elif(input_val == 3):
+		range_of_vals = int(input("Enter The Column Range\n"))
+		credits -= range_of_vals * 10
+		print(df.head(range_of_vals))
+
+	return credits
 
