@@ -9,9 +9,13 @@ print("The dataset with 300 entries will be loaded")
 df = hd.load_data_init_train()
 df_test = hd.load_data_test()
 print(df.shape)
+print(str(df_test.shape))
+true_pred = pd.DataFrame({'SalePrice' :df_test['SalePrice']})
+true_pred = true_pred.values
+true_pred = true_pred.flatten()
+print(str(true_pred.shape))
 
-true_pred = pd.DataFrame({'Id' : df['Id'],'SalePrice' :df['SalePrice']})
-
+model_counter = 0
 print("Dataset is Loaded")
 input("Press to continue")
 print()
@@ -161,7 +165,7 @@ while(True):
 			print("We are returning back then!! Next time be Careful")
 			continue
 
-		
+		model_counter+=1;
 		print("Options Available")
 		print()
 		print("linear - Linear Regression")
@@ -169,16 +173,16 @@ while(True):
 		print("lasso - Lasso Regression")
 		print()
 		input_val = (input("Enter the Value\n"))
-		Y_test,credits = mn.model_type(input_val,X_train,Y_train,X_test,credits)
-
+		Y_test,credits = mn.model_type(input_val,X_train,Y_train,X_test,credits,model_counter)
+		print(str(Y_test.shape))
 		print("Your Available Credits are " + str(credits))
 		print()
 
 
 	elif(str_val == 9):
-		X_train,Y_train = df.convert_to_matrix(df,test = False)
-		X_test = df.convert_to_matrix(df_test,test = True)
-		print("Shape of X_train, Y_train and X_test are " + str(X_train) + str(Y_train) + str(X_test))
+		X_train,Y_train = hd.convert_to_matrix(df,test = False)
+		X_test = hd.convert_to_matrix(df_test,test = True)
+		print("Shape of X_train, Y_train and X_test are " + str(X_train.shape) + str(Y_train.shape) + str(X_test.shape))
 		print()
 
 	elif(str_val == 10):

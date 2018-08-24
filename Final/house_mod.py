@@ -12,13 +12,13 @@ import missingno as msno
 
 def load_data_init_train():
 	""" Creating the DataFrames """
-	df = pd.read_csv("train_game.csv")
+	df = pd.read_csv("train_not.csv")
 	df = pd.DataFrame(df)
 	return df[0:300]
 
 def load_data_in_train(x1,x2,credits):
 	""" Creating Dataframes with credits change """
-	df = pd.read_csv("train_game.csv")
+	df = pd.read_csv("train_not.csv")
 	df = pd.DataFrame(df)
 	if(x2 >= 1001):
 		print("Dont cross your limits!!")
@@ -33,7 +33,7 @@ def load_data_in_train(x1,x2,credits):
 
 def load_data_test():
 	""" Test Loading Initially """
-	df = pd.read_csv("train_game.csv")
+	df = pd.read_csv("train_not.csv")
 	df = pd.DataFrame(df)
 	return df[1000:]
 
@@ -248,7 +248,7 @@ def Model_Linear(X_train,Y_train,X_test):
 	#plt.show()
 	return Y_test
 
-def Model_Rigid(X_train,Y_train,X_test):
+def Model_Ridge(X_train,Y_train,X_test):
 	reg = linear_model.Ridge (alpha = .5)
 	model = reg.fit(X_train,Y_train)
 	Y_test = model.predict(X_test)

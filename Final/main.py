@@ -2,9 +2,8 @@ import numpy as np
 import pandas as pd
 import house_mod as hd
 import matplotlib.pyplot as plt
-
+from sklearn import metrics
 credits = 100000
-model_counter = 0
 
 # Initially 300 Data
 df = hd.load_data_init_train()
@@ -86,11 +85,12 @@ def drop(df,credits,input_val):
 
 	return df,credits
 
-def model_type(model_name,X_train,Y_train,X_test,credits):
+def model_type(model_name,X_train,Y_train,X_test,credits,model_counter):
 	""" Which Model to call """
+
 	model_counter+=1
 	if(model_counter < 2):
-		Y_test = hd.Model(X_train,Y_train,X_test)
+		Y_test = hd.Model_Linear(X_train,Y_train,X_test)
 	else:
 		if(model_name == 'linear'):
 			credits -= 3000
@@ -106,7 +106,7 @@ def model_type(model_name,X_train,Y_train,X_test,credits):
 
 def accuracy(Y_test,true_pred):
 	""" Accuracy """
-	val = metrics.accuracy_score(Y_test,true_pred)
+	val = metrics.explained_variance_score(Y_test,true_pred)
 	return val * 100
 
 
