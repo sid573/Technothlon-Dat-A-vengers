@@ -104,22 +104,22 @@ def histogram(df,credits):
 def matrix(df,credits):
  	matrix = 500
  	credits = credits - matrix
- 	return msno.matrix(df.sample(250)),credits
+ 	return msno.matrix(df.sample(df.shape[0])),credits
 
 def heatmap(df,credits):
  	heatmap = 400
  	credits = credits - heatmap
- 	return msno.heatmap(df.sample(250)),credits	
+ 	return msno.heatmap(df.sample(df.shape[0])),credits	
 
 def dendrogram(df,credits):
  	dendrogram = 400
  	credits = credits - dendrogram
- 	return msno.dendrogram(df.sample(250)),credits
+ 	return msno.dendrogram(df.sample(df.shape[0])),credits
 
 def bar(df,credits):
 	bar = 700
 	credits = credits - bar
-	return msno.bar(df.sample(250)),credits
+	return msno.bar(df.sample(df.shape[0])),credits
 
 ################## MISSING DONE #########################
 
