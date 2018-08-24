@@ -102,7 +102,7 @@ def model_type(model_name,X_train,Y_train,X_test,credits):
 			credits -= 5000
 			Y_test = hd.Model_Lasso(X_train,Y_train,X_test)
 
-return Y_test,credits
+	return Y_test,credits
 
 def accuracy(Y_test,true_pred):
 	""" Accuracy """
