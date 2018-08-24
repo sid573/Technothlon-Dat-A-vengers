@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from keras.models import Sequential
+#
 from keras.layers import Dense,Activation
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
