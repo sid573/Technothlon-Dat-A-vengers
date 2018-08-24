@@ -102,7 +102,7 @@ while(True):
 		print("2 - Histogram")
 		print()
 		input_val = int(input("Enter the Value\n"))
-
+		col = ""
 		if(input_val == 1):
 			col = input("Enter Column Name\n")
 
