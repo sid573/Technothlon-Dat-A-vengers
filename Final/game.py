@@ -10,6 +10,8 @@ df = hd.load_data_init_train()
 df_test = hd.load_data_test()
 print(df.shape)
 
+true_pred = pd.DataFrame({'Id' : df['Id'],'SalePrice' :df['SalePrice']})
+
 print("Dataset is Loaded")
 input("Press to continue")
 print()
