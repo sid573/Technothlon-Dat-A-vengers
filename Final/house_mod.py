@@ -43,6 +43,7 @@ def load_data_test():
 
 def see_null_each(df,credits):
 	"""Nullity check """
+	pd.set_option('max_rows', 81)
 	print(df.isna().any())
 	credits -= 100
 	return credits
