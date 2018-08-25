@@ -8,6 +8,7 @@ credits = 100000
 # Initially 300 Data
 df = hd.load_data_init_train()
 df_test = hd.load_data_test()
+orig_df = pd.read_csv("train_game.csv")
 print(df.shape)
 
 def append_data(x1 , x2 , credits):
@@ -27,7 +28,7 @@ def check_null(df,input_val,credits,col_name = None):
 		credits = hd.null_any(df,credits)
 	return credits
 
-def normalization(df,input_val,credits,col_name	= None):
+def normalization(df,input_val,credits,col_name):
 	""" Which Normalization to call """
 	if(input_val == 1):
 		df,credits = hd.better_normalization(df,col_name,credits)
@@ -37,12 +38,12 @@ def normalization(df,input_val,credits,col_name	= None):
 		df,credits = hd.std_normalization(df,col_name,credits)
 	return df,credits
 
-def draw_graph(df,credits,input_val,col_name = None):
+def draw_graph(df,credits,input_val,col_name):
 	""" Which Graph """
 	if(input_val == 1):
 		pl,credits = hd.line(df,credits,col_name)
 	else:
-		pl,credits = hd.histogram(df,credits)
+		pl,credits = hd.histogram(df,credits,col_name)
 
 	plt.show()
 	return credits
@@ -79,9 +80,11 @@ def drop(df,credits,input_val):
 	if(input_val == 1):
 		col_name = input("Enter Column Name\n")
 		df,credits = hd.drop_columns(df,credits,col_name)
+		orig_df,_ = hd.drop_columns(orig_df,0,col_name)
 	else:
 		row_index = int(input("Enter Row Name\n"))
 		df,credits = hd.drop_rows(df,credits,row_index)
+		orig_df,_ = hd.drop_rows(orig_df,0,row_index)
 
 	return df,credits
 

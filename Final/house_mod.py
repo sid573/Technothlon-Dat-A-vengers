@@ -1,16 +1,9 @@
 import numpy as np 
 import pandas as pd
 import matplotlib.pyplot as plt
-<<<<<<< HEAD
-from keras.models import Sequential
-#
-from keras.layers import Dense,Activation
-=======
->>>>>>> cc3dc2a84c170efeb2af52d987e6711073020e6a
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 import missingno as msno
-#from main import *
 
 ########### LOADING TRAIN DATA #####################
 
@@ -95,11 +88,11 @@ def line(df,credits,col_name):
 	credits = credits - line 
 	return df[col_name].plot(kind = 'line'),credits
 
-def histogram(df,credits):
+def histogram(df,credits,col_name):
 	""" Histogram for Whole Data """
 	hist = 500 
 	credits = credits - hist 
-	return df.plot(kind = 'hist'),credits
+	return df.hist(column = col_name),credits
 
 ############ VISUALIZATION DONE #######################
 
