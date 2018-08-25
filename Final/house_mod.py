@@ -1,6 +1,12 @@
 import numpy as np 
 import pandas as pd
 import matplotlib.pyplot as plt
+<<<<<<< HEAD
+from keras.models import Sequential
+#
+from keras.layers import Dense,Activation
+=======
+>>>>>>> cc3dc2a84c170efeb2af52d987e6711073020e6a
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 import missingno as msno
