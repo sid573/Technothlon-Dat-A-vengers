@@ -173,8 +173,9 @@ while(True):
 		print("lasso - Lasso Regression")
 		print()
 		input_val = (input("Enter the Value\n"))
-		Y_test,credits = mn.model_type(input_val,X_train,Y_train,X_test,credits,model_counter)
+		Y_test,train_y,credits = mn.model_type(input_val,X_train,Y_train,X_test,credits,model_counter)
 		print(str(Y_test.shape))
+		print(str(train_y.shape))
 		print("Your Available Credits are " + str(credits))
 		print()
 
@@ -193,8 +194,10 @@ while(True):
 			print("Revert back then")
 			continue
 
-		pred_val = mn.accuracy(Y_test,true_pred)
-		print("Your Prediction Value is " + str(pred_val))
+		test_acc = mn.accuracy(Y_test,true_pred)
+		train_acc = mn.accuracy(train_y,Y_train)
+		print("Your Test Prediction Value is " + str(test_acc))
+		print("Your Train accuracy is " + str(train_acc))
 		print()
 
 	elif(str_val == 11):

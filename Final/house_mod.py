@@ -1,9 +1,12 @@
 import numpy as np 
 import pandas as pd
 import matplotlib.pyplot as plt
+<<<<<<< HEAD
 from keras.models import Sequential
 #
 from keras.layers import Dense,Activation
+=======
+>>>>>>> cc3dc2a84c170efeb2af52d987e6711073020e6a
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 import missingno as msno
@@ -232,36 +235,27 @@ def Model_Linear(X_train,Y_train,X_test):
 	model = lm.fit(X_train,Y_train)
 	Y_test = model.predict(X_test)
 	Y_test = Y_test.flatten()
-	#plt.plot(model.history['acc'])
-	#plt.plot(model.history['val_acc'])
-	#plt.title('Model accuracy')
-	#plt.ylabel('Accuracy')
-	#plt.xlabel('epoch')
-	#plt.legend(['train', 'test'], loc='upper left')
-	#plt.show()
-	# summarize history for loss
-	#plt.plot(history.history['loss'])
-	#plt.plot(history.history['val_loss'])
-	#plt.title('model loss')
-	#plt.ylabel('loss')
-	#plt.xlabel('epoch')
-	#plt.legend(['train', 'test'], loc='upper left')
-	#plt.show()
-	return Y_test
+	train_y = model.predict(X_train)
+	train_y = train_y.flatten()
+	return Y_test,train_y
 
 def Model_Ridge(X_train,Y_train,X_test):
 	reg = linear_model.Ridge (alpha = .5)
 	model = reg.fit(X_train,Y_train)
 	Y_test = model.predict(X_test)
 	Y_test = Y_test.flatten()
-	return Y_test
+	train_y = model.predict(X_train)
+	train_y = train_y.flatten()
+	return Y_test,train_y
 
 def Model_Lasso(X_train,Y_train,X_test):
 	reg = linear_model.Lasso(alpha = 0.1)
 	model = reg.fit(X_train,Y_train)
 	Y_test = model.predict(X_test)
 	Y_test = Y_test.flatten()
-	return Y_test
+	train_y = model.predict(X_train)
+	train_y = tarin_y.flatten()
+	return Y_test,train_y
 
 
 ########################### CSV FILE ################################
