@@ -11,6 +11,8 @@ from sklearn import metrics
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 import missingno as msno
+import io
+import base64
 ###############################################
 
 def load_data_init_train():
@@ -68,11 +70,11 @@ def null_any(df,credits):
 	return credits
 
 
-def check_null(df,input_val,credits,col_name = None):
+def check_null(df,input_val,credits,col_name ):
 	""" Which Null to call """
-	if(input_val == 1):
+	if(input_val == "columns_null"):
 		credits = see_null_each(df,credits)
-	elif(input_val == 2):
+	elif(input_val == "total_null"):
 		credits = null_sum(df,col_name,credits)
 	else:
 		credits = null_any(df,credits)
@@ -99,7 +101,7 @@ def std_normalization(df,col_name,credits):
 	return df,credits 
 
  
-def normalization(df,input_val,credits,col_name	= None):
+def normalization(df,input_val,credits,col_name):
 	""" Which Normalization to call """
 	if(input_val == 1):
 		df,credits = better_normalization(df,col_name,credits)
@@ -109,6 +111,34 @@ def normalization(df,input_val,credits,col_name	= None):
 		df,credits = std_normalization(df,col_name,credits)
 	return df,credits
 ############################# nor done #######################################################################
+
+########################################### graph data ##########################################################
+
+def line(df,credits,col_name):
+	""" Line Graph per column"""
+	line = 50 
+	credits = credits - line 
+	return df[col_name].plot(kind = 'line'),credits
+
+def histogram(df,credits):
+	""" Histogram for Whole Data """
+	hist = 500 
+	credits = credits - hist 
+	return df.plot(kind = 'hist'),credits
+
+def draw_graph(df,credits,input_val,col_name = None):
+	""" Which Graph """
+	if(input_val == 1):
+		pl,credits = line(df,credits,col_name)
+	else:
+		pl,credits = histogram(df,credits)
+	buf = io.BytesIO()
+	plt.savefig(buf, format='png')
+	image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
+	buf.close()
+	return image_base64, credits
+
+#############################done graph #######################################################################
 
 
 def Start(request):
@@ -177,8 +207,8 @@ def View_2(request):
 		
 		ts.data = df.to_string()
 		cr.credits = credits
-		ts.save()
-		cr.save()
+		#ts.save()
+		#cr.save()
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
@@ -200,6 +230,27 @@ def View_3(request):
 		cr.credits = credits
 		#ts.save()
 		#cr.save()
+		dic = {}
+		dic['credit'] = credits
+		dic['message'] = "Successful."
+		return HttpResponse(json.dumps(dic))
+
+
+
+def View_4(request):
+	if request.method=="POST":
+		input_val = request.POST['input_val']
+		col = request.POST['col']
+		ts = TableSet.objects.filter(user=request.user.id).first()
+		cr = Credits.objects.filter(user=request.user.id).first()
+		credits = cr.credits
+		df = to_pd(ts.data)
+		graph, credits = draw_graph(df,credits,input_val,col)
+		ts.data = df.to_string()
+		cr.credits = credits
+		#ts.save()
+		#cr.save()
+		return HttpResponse(graph)
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
