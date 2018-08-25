@@ -23,4 +23,5 @@ urlpatterns = [
     path('view_1', views.View_1, name='start'),
     path('view_2', views.View_2, name='start'),
     path('view_3', views.View_3, name='start'),
+    path('view_4', views.View_4, name='start'),
 ]

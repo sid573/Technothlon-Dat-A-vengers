@@ -83,9 +83,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
         <div class="w3-half">
           <label>From</label>
                     <form action="">	<select name="norm" id="norm_l">
-   					 <option value="masd">Mean and Standard Deviation</option>
-   					 <option value="mean">Mean</option>
-   					 <option value="sd">Standard Deviation</option>
+   					 <option value="1">Mean and Standard Deviation</option>
+   					 <option value="2">Mean</option>
+   					 <option value="3">Standard Deviation</option>
   					</select>
   					<br><br>
 			</form>
@@ -108,24 +108,24 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-half">
           <label>From</label>
-                    <form action="">	<select name="columns">
-   					 <option value="volvo">Line</option>
-   					 <option value="saab">Histogram</option>
+                    <form action="">	<select name="graph" id="data_graph">
+   					 <option value="Line">Line</option>
+   					 <option value="Histogram">Histogram</option>
   					</select>
   					<br><br>
 			</form>
         </div>
         <div class="w3-half">
           <label>Select Columns</label>
-          <form action="">	<select name="columns">
-   					 <option value="volvo">Alley</option>
-   					 <option value="saab">SalePrice</option>
+          <form action="">	<select name="columns" id="graph_col">
+   					 <option value="Alley">Alley</option>
+   					 <option value="SalePrice">SalePrice</option>
   					</select>
   					<br><br>
 			</form>
         </div>
       </div>
-      <p><button class="w3-button w3-dark-grey">Go Bro...</button></p>
+      <p><button class="w3-button w3-dark-grey"  onclick="view4();" >Go Bro...</button></p>
     </div>
 
 
@@ -185,7 +185,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
     <p>Travel with us and see nature at its finest.</p>
   </div>
   <div class="w3-row-padding">
-    <div class="w3-half w3-margin-bottom">
+    <div class="w3-half w3-margin-bottom" id="imgdisp">
       <img src="/static//w3images/ocean2.jpg" alt="Norway" style="width:100%">
       <div class="w3-container w3-white">
         <h3>West Coast, Norway</h3>
@@ -322,6 +322,18 @@ function view3(){
             $("#creditdisplay").html(xm['credit']);
           }
           alert(xm["message"]);
+      }
+  });
+}
+
+
+function view4(){
+  $.ajax({
+      type: "POST",
+      url: "/view_4",
+      data: {'input_val':$("#data_graph").val(),'col':$("#graph_col").val(),csrfmiddlewaretoken:'{{ csrf_token }}'},
+      success: function(resultData){
+          $("#imgdisp").html('<img src="data:image/png;base64, '+resultData+'"/>');
       }
   });
 }
