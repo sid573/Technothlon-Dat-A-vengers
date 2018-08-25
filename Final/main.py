@@ -127,3 +127,10 @@ def show_data(df,credits,input_val):
 
 	return credits
 
+
+def prize(test_acc,train_acc,credits):
+	""" Credits given to them for getting good train and test accuracy """
+	######### Give Credits depending on the Accuracies ########
+	######### Credits += (Whatever will be the best)
+
+	return credits

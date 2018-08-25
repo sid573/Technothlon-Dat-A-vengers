@@ -196,8 +196,14 @@ while(True):
 
 		test_acc = mn.accuracy(Y_test,true_pred)
 		train_acc = mn.accuracy(train_y,Y_train)
+
+		credits = mn.prize(test_acc,train_acc,credits)
+
 		print("Your Test Prediction Value is " + str(test_acc))
 		print("Your Train accuracy is " + str(train_acc))
+		print()
+		print("Good! You got some Credits")
+		print("Available Credits are " + str(credits))
 		print()
 
 	elif(str_val == 11):
