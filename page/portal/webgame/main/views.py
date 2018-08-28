@@ -70,7 +70,7 @@ def null_any(df,credits):
 	return credits
 
 
-def check_null(df,input_val,credits,col_name ):
+def check_null(df,input_val,credits,col_name = None ):
 	""" Which Null to call """
 	if(input_val == "columns_null"):
 		credits = see_null_each(df,credits)
@@ -120,18 +120,19 @@ def line(df,credits,col_name):
 	credits = credits - line 
 	return df[col_name].plot(kind = 'line'),credits
 
-def histogram(df,credits):
+def histogram(df,credits , col_name):
 	""" Histogram for Whole Data """
 	hist = 500 
 	credits = credits - hist 
-	return df.plot(kind = 'hist'),credits
+	return df[col_name].plot(kind = 'hist'),credits
 
-def draw_graph(df,credits,input_val,col_name = None):
+def draw_graph(df,credits,input_val,col_name ):
 	""" Which Graph """
 	if(input_val == 1):
 		pl,credits = line(df,credits,col_name)
 	else:
-		pl,credits = histogram(df,credits)
+		pl,credits = histogram(df,credits , col_name)
+
 	buf = io.BytesIO()
 	plt.savefig(buf, format='png')
 	image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
@@ -139,6 +140,80 @@ def draw_graph(df,credits,input_val,col_name = None):
 	return image_base64, credits
 
 #############################done graph #######################################################################
+
+################################################# null graph ####################################################
+
+def null_graph(df,credits,input_val):
+	""" Which Missing No Grpah to Call """
+	# Graphs are Sexy but are not very Sizzling Hot #
+	if(input_val == 1):
+		pl,credits = matrix(df,credits)
+	elif(input_val == 2):
+		pl,credits = heatmap(df,credits)
+	elif(input_val == 3):
+		pl,credits = dendrogram(df,credits)
+	else:
+		pl,credits = bar(df,credits)
+	
+	buf = io.BytesIO()
+	plt.savefig(buf, format='png')
+	image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
+	buf.close()
+	return image_base64, credits
+
+
+def matrix(df,credits):
+ 	matrix = 500
+ 	credits = credits - matrix
+ 	return matrix(df.sample(df.shape[0])),credits
+
+def heatmap(df,credits):
+ 	heatmap = 400
+ 	credits = credits - heatmap
+ 	return heatmap(df.sample(df.shape[0])),credits	
+
+def dendrogram(df,credits):
+ 	dendrogram = 400
+ 	credits = credits - dendrogram
+ 	return dendrogram(df.sample(df.shape[0])),credits
+
+def bar(df,credits):
+	bar = 700
+	credits = credits - bar
+	return bar(df.sample(df.shape[0])),credits
+
+############################################ ng Done ############################################################## 
+############################################# Fill null ###########################################################
+def mean_null(df,credits,col_name):
+	""" Fill NUll values with mean"""
+	df[col_name] = df[col_name].fillna(df[col_name].mean())
+	credits -= 400
+	return df,credits
+
+def zero_null(df,credits,col_name):
+	""" Fill Null with 0's """
+	df[col_name] = df[col_name].fillna(0)
+	credits -= 100
+	return df,credits
+
+def std_null(df,credits,col_name):
+	""" Fill NUll values with standard deviation """
+	df[col_name] = df[col_name].fillna(df[col_name].std())
+	credits -= 250
+	return df,credits
+
+def fill_null(df,credits,input_val,col_name):
+	""" Which null filler to call """
+	if(input_val == 1):
+		df,credits = mean_null(df,credits,col_name)
+	elif(input_val == 2):
+		df,credits = zero_null(df,credits,col_name)
+	else:
+		df,credits = std_null(df,credits,col_name)
+
+	return df,credits
+
+############################################## f n done #########################################################
 
 
 def Start(request):
@@ -219,7 +294,7 @@ def View_2(request):
 
 def View_3(request):
 	if request.method=="POST":
-		input_val = request.POST['input_val']
+		input_val = int(request.POST['input_val'])
 		col = request.POST['col']
 		ts = TableSet.objects.filter(user=request.user.id).first()
 		cr = Credits.objects.filter(user=request.user.id).first()
@@ -239,7 +314,7 @@ def View_3(request):
 
 def View_4(request):
 	if request.method=="POST":
-		input_val = request.POST['input_val']
+		input_val = int( request.POST['input_val'])
 		col = request.POST['col']
 		ts = TableSet.objects.filter(user=request.user.id).first()
 		cr = Credits.objects.filter(user=request.user.id).first()
@@ -251,6 +326,43 @@ def View_4(request):
 		#ts.save()
 		#cr.save()
 		return HttpResponse(graph)
+		dic = {}
+		dic['credit'] = credits
+		dic['message'] = "Successful."
+		return HttpResponse(json.dumps(dic))
+
+def View_5(request):
+	if request.method=="POST":
+		input_val = int(request.POST['input_val'])
+		ts = TableSet.objects.filter(user=request.user.id).first()
+		cr = Credits.objects.filter(user=request.user.id).first()
+		credits = cr.credits
+		df = to_pd(ts.data)
+		graph , credits = null_graph(df,credits,input_val)
+		ts.data = df.to_string()
+		cr.credits = credits
+		#ts.save()
+		#cr.save()
+		return HttpResponse(graph)
+		dic = {}
+		dic['credit'] = credits
+		dic['message'] = "Successful."
+		return HttpResponse(json.dumps(dic))
+
+
+def View_6(request):
+	if request.method=="POST":
+		input_val = int(request.POST['input_val'])
+		col = request.POST['col']
+		ts = TableSet.objects.filter(user=request.user.id).first()
+		cr = Credits.objects.filter(user=request.user.id).first()
+		credits = cr.credits
+		df = to_pd(ts.data)
+		df,credits = fill_null(df,credits,input_val,col)
+		ts.data = df.to_string()
+		cr.credits = credits
+		#ts.save()
+		#cr.save()
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
