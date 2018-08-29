@@ -4,18 +4,18 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 import missingno as msno
-
+import seaborn as sns
 ########### LOADING TRAIN DATA #####################
 
 def load_data_init_train():
 	""" Creating the DataFrames """
-	df = pd.read_csv("train_not.csv")
+	df = pd.read_csv("train_game.csv")
 	df = pd.DataFrame(df)
 	return df[0:300]
 
 def load_data_in_train(x1,x2,credits):
 	""" Creating Dataframes with credits change """
-	df = pd.read_csv("train_not.csv")
+	df = pd.read_csv("train_game.csv")
 	df = pd.DataFrame(df)
 	if(x2 >= 1001):
 		print("Dont cross your limits!!")
@@ -30,7 +30,7 @@ def load_data_in_train(x1,x2,credits):
 
 def load_data_test():
 	""" Test Loading Initially """
-	df = pd.read_csv("train_not.csv")
+	df = pd.read_csv("train_game.csv")
 	df = pd.DataFrame(df)
 	return df[1000:]
 
@@ -94,6 +94,14 @@ def histogram(df,credits,col_name):
 	credits = credits - hist 
 	return df.hist(column = col_name),credits
 
+def heatmap_total(df,credits):
+	""" Heatmap of Complete Data """
+	credits -= 1000
+	corrmat = df.corr()
+	ax = plt.plot(figsize=(12, 9))
+	return sns.heatmap(corrmat, vmax=.8, square=True),credits;
+	
+
 ############ VISUALIZATION DONE #######################
 
 ############ MISSING NUMBER VISUALIZATION #################
@@ -117,6 +125,19 @@ def bar(df,credits):
 	bar = 700
 	credits = credits - bar
 	return msno.bar(df.sample(df.shape[0])),credits
+
+def best_null(df,credits):
+	credits-=2000
+	df_na = (df.isnull().sum() / len(df)) * 100
+	df_na = df_na.drop(df_na[df_na == 0].index).sort_values(ascending=False)[:30]
+	missing_data = pd.DataFrame({'Missing Ratio' :df_na})
+	ax = plt.plot(figsize=(15, 12))
+	plt.xticks(rotation='90')
+	sns.barplot(x=df_na.index, y=df_na)
+	plt.xlabel('Features', fontsize=15)
+	plt.ylabel('Percent of missing values', fontsize=15)
+	plt.title('Percent missing data by feature', fontsize=15)
+	return ax,credits
 
 ################## MISSING DONE #########################
 

@@ -42,8 +42,11 @@ def draw_graph(df,credits,input_val,col_name):
 	""" Which Graph """
 	if(input_val == 1):
 		pl,credits = hd.line(df,credits,col_name)
-	else:
+	elif(input_val == 2):
 		pl,credits = hd.histogram(df,credits,col_name)
+	elif(input_val == 3):
+		pl,credits = hd.heatmap_total(df,credits)
+	
 
 	plt.show()
 	return credits
@@ -58,8 +61,10 @@ def null_graph(df,credits,input_val):
 		pl,credits = hd.heatmap(df,credits)
 	elif(input_val == 3):
 		pl,credits = hd.dendrogram(df,credits)
-	else:
+	elif(input_val == 4):
 		pl,credits = hd.bar(df,credits)
+	elif(input_val == 5):
+		pl,credits = hd.best_null(df,credits)
 	
 	plt.show()
 	return credits

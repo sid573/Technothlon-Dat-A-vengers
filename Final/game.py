@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 import house_mod as hd
 import main as mn
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 credits = 100000
 print("The dataset with 300 entries will be loaded")
 # Initially 300 Data
@@ -14,6 +15,9 @@ true_pred = pd.DataFrame({'SalePrice' :df_test['SalePrice']})
 true_pred = true_pred.values
 true_pred = true_pred.flatten()
 print(str(true_pred.shape))
+
+
+input("Press to continue")
 
 model_counter = 0
 print("Dataset is Loaded")
@@ -104,6 +108,7 @@ while(True):
 		print()
 		print("1 - Line")
 		print("2 - Histogram")
+		print("3 - HeatMap")
 		print()
 		input_val = int(input("Enter the Value\n"))
 		col = ""
@@ -122,6 +127,7 @@ while(True):
 		print("2 - HeatMap")
 		print("3 - Dendrogram")
 		print("4 - Bar")
+		print("5 - Colour Bar")
 		print()
 		input_val = int(input("Enter the Value\n"))
 		credits = mn.null_graph(df,credits,input_val)
