@@ -15,9 +15,11 @@ import io
 import base64
 ###############################################
 
+
 def load_data_init_train():
 	""" Creating the DataFrames """
 	df = pd.read_csv("train_game.csv")
+	orig_df = pd.read_csv("train_game.csv")
 	df = pd.DataFrame(df)
 	return df[0:300]
 
@@ -118,13 +120,13 @@ def line(df,credits,col_name):
 	""" Line Graph per column"""
 	line = 50 
 	credits = credits - line 
-	return df[col_name].plot(kind = 'line'),credits
+	return df[col_name].plot(x = df.shape[0] , y = df.shape[1] , kind = 'line'),credits
 
 def histogram(df,credits , col_name):
 	""" Histogram for Whole Data """
 	hist = 500 
 	credits = credits - hist 
-	return df[col_name].plot(kind = 'hist'),credits
+	return df[col_name].plot(x = df.shape[1] , y = df.shape[0] ,kind = 'hist'),credits
 
 def draw_graph(df,credits,input_val,col_name ):
 	""" Which Graph """
@@ -134,7 +136,7 @@ def draw_graph(df,credits,input_val,col_name ):
 		pl,credits = histogram(df,credits , col_name)
 
 	buf = io.BytesIO()
-	plt.savefig(buf, format='png')
+	plt.savefig(buf, format='jpg')
 	image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
 	buf.close()
 	return image_base64, credits
@@ -142,45 +144,46 @@ def draw_graph(df,credits,input_val,col_name ):
 #############################done graph #######################################################################
 
 ################################################# null graph ####################################################
+def matrix2(df,credits):
+ 	matrix3 = 500
+ 	credits = credits - matrix3
+ 	return msno.matrix(df.sample(df.shape[0])),credits
+
+def heatmap2(df,credits):
+ 	heatmap3 = 400
+ 	credits = credits - heatmap3
+ 	return msno.heatmap(df.sample(df.shape[0])),credits	
+
+def dendrogram2(df,credits):
+ 	dendrogram3 = 400
+ 	credits = credits - dendrogram3
+ 	return msno.dendrogram(df.sample(df.shape[0])),credits
+
+def bar2(df,credits):
+	bar3 = 700
+	credits = credits - bar3
+	return msno.bar(df.sample(df.shape[0])),credits
+
 
 def null_graph(df,credits,input_val):
 	""" Which Missing No Grpah to Call """
 	# Graphs are Sexy but are not very Sizzling Hot #
 	if(input_val == 1):
-		pl,credits = matrix(df,credits)
+		pl,credits = matrix2(df,credits)
 	elif(input_val == 2):
-		pl,credits = heatmap(df,credits)
+		pl,credits = heatmap2(df,credits)
 	elif(input_val == 3):
-		pl,credits = dendrogram(df,credits)
+		pl,credits = dendrogram2(df,credits)
 	else:
-		pl,credits = bar(df,credits)
+		pl,credits = bar2(df,credits)
 	
 	buf = io.BytesIO()
-	plt.savefig(buf, format='png')
+	plt.savefig(buf, format='jpg')
 	image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
 	buf.close()
 	return image_base64, credits
 
 
-def matrix(df,credits):
- 	matrix = 500
- 	credits = credits - matrix
- 	return matrix(df.sample(df.shape[0])),credits
-
-def heatmap(df,credits):
- 	heatmap = 400
- 	credits = credits - heatmap
- 	return heatmap(df.sample(df.shape[0])),credits	
-
-def dendrogram(df,credits):
- 	dendrogram = 400
- 	credits = credits - dendrogram
- 	return dendrogram(df.sample(df.shape[0])),credits
-
-def bar(df,credits):
-	bar = 700
-	credits = credits - bar
-	return bar(df.sample(df.shape[0])),credits
 
 ############################################ ng Done ############################################################## 
 ############################################# Fill null ###########################################################
@@ -214,13 +217,41 @@ def fill_null(df,credits,input_val,col_name):
 	return df,credits
 
 ############################################## f n done #########################################################
+################################################ drop column ######################################################
+def drop_columns(df,credits,col_name):
+	""" Cols to be Dropped """
+	df = df.drop(col_name,axis = 1)
+	credits -= 50
+	return df,credits
+
+def drop_col(df,credits,col_name):
+	
+	df,credits = drop_columns(df,credits,col_name)
+	orig_df,_ = drop_columns(orig_df,0,col_name)
+
+######################################## d c done #################################################################
+
+############################################### Drop Row ##########################################################
+def drop_rows(df,credits,row_index):
+	""" Row to be Dropped """
+	df = df.drop(row_index,axis = 0)
+	credits -= 100
+	return df,credits
+def drop_r(df,credits,row_index ):
+	df,credits = drop_rows(df,credits,row_index)
+	orig_df,_ = drop_rows(orig_df,0,row_index)
+
+################################################ d r Done ########################################################
 
 
 def Start(request):
 	if request.user.is_authenticated:
-		return render(request,'main/index.html',{'key':["cgghjghm","advdfv",5656,955,875],'sid':0})
+		credit = Credits.objects.filter(user=request.user.id).first()
+		columns = ["MSSubClass","MSZoning","LotFrontage","LotArea","Street","Alley","LotShape","LandContour","Utilities","LotConfig","LandSlope","Neighborhood","Condition1","Condition2","BldgType","HouseStyle","OverallQual","OverallCond","YearBuilt","YearRemodAdd","RoofStyle","RoofMatl","Exterior1st","Exterior2nd","MasVnrType","MasVnrArea","ExterQual","ExterCond","Foundation","BsmtQual","BsmtCond","BsmtExposure","BsmtFinType1","BsmtFinSF1","BsmtFinType2","BsmtFinSF2","BsmtUnfSF","TotalBsmtSF","Heating","HeatingQC","CentralAir","Electrical","1stFlrSF","2ndFlrSF","LowQualFinSF","GrLivArea","BsmtFullBath","BsmtHalfBath","FullBath","HalfBath","BedroomAbvGr","KitchenAbvGr","KitchenQual","TotRmsAbvGrd","Functional","Fireplaces","FireplaceQu","GarageType","GarageYrBlt","GarageFinish","GarageCars","GarageArea","GarageQual","GarageCond","PavedDrive","WoodDeckSF","OpenPorchSF","EnclosedPorch","3SsnPorch","ScreenPorch","PoolArea","PoolQC","Fence","MiscFeature","MiscVal","MoSold","YrSold","SaleType","SaleCondition","SalePrice"]
+		return render(request,'main/index.html',{'credits':credit.credits,'cols':columns})
 	else:
 		return HttpResponse("Not Logged IN")
+
 
 def Index(request):
 
@@ -282,8 +313,8 @@ def View_2(request):
 		
 		ts.data = df.to_string()
 		cr.credits = credits
-		#ts.save()
-		#cr.save()
+		ts.save()
+		cr.save()
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
@@ -303,8 +334,8 @@ def View_3(request):
 		df,credits = normalization(df,input_val,credits,col )
 		ts.data = df.to_string()
 		cr.credits = credits
-		#ts.save()
-		#cr.save()
+		ts.save()
+		cr.save()
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
@@ -323,12 +354,13 @@ def View_4(request):
 		graph, credits = draw_graph(df,credits,input_val,col)
 		ts.data = df.to_string()
 		cr.credits = credits
-		#ts.save()
-		#cr.save()
-		return HttpResponse(graph)
+		ts.save()
+		cr.save()
+		
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
+		dic['graph'] = graph
 		return HttpResponse(json.dumps(dic))
 
 def View_5(request):
@@ -341,12 +373,13 @@ def View_5(request):
 		graph , credits = null_graph(df,credits,input_val)
 		ts.data = df.to_string()
 		cr.credits = credits
-		#ts.save()
-		#cr.save()
-		return HttpResponse(graph)
+		ts.save()
+		cr.save()
+		
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
+		dic['graph'] = graph
 		return HttpResponse(json.dumps(dic))
 
 
@@ -361,8 +394,42 @@ def View_6(request):
 		df,credits = fill_null(df,credits,input_val,col)
 		ts.data = df.to_string()
 		cr.credits = credits
-		#ts.save()
-		#cr.save()
+		ts.save()
+		cr.save()
+		dic = {}
+		dic['credit'] = credits
+		dic['message'] = "Successful."
+		return HttpResponse(json.dumps(dic))
+
+def View_7(request):
+	if request.method=="POST":
+		col = request.POST['col']
+		ts = TableSet.objects.filter(user=request.user.id).first()
+		cr = Credits.objects.filter(user=request.user.id).first()
+		credits = cr.credits
+		df = to_pd(ts.data)
+		df,credits = drop_col(df,credits,col)
+		ts.data = df.to_string()
+		cr.credits = credits
+		ts.save()
+		cr.save()
+		dic = {}
+		dic['credit'] = credits
+		dic['message'] = "Successful."
+		return HttpResponse(json.dumps(dic))
+
+def View_8(request):
+	if request.method=="POST":
+		input_val = request.POST['input_val']
+		ts = TableSet.objects.filter(user=request.user.id).first()
+		cr = Credits.objects.filter(user=request.user.id).first()
+		credits = cr.credits
+		df = to_pd(ts.data)
+		df,credits = drop_r(df,credits,input_val)
+		ts.data = df.to_string()
+		cr.credits = credits
+		ts.save()
+		cr.save()
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
