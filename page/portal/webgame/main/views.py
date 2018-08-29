@@ -22,9 +22,8 @@ model_counter = 0
 def load_data_init_train():
 	""" Creating the DataFrames """
 	df = pd.read_csv("train_game.csv")
-	orig_df = pd.read_csv("train_game.csv")
 	df = pd.DataFrame(df)
-	return df[0:300]
+	return df
 
 def load_data_test():
 	""" Test Loading Initially """
@@ -231,7 +230,8 @@ def drop_columns(df,credits,col_name):
 def drop_col(df,credits,col_name):
 	
 	df,credits = drop_columns(df,credits,col_name)
-	orig_df,_ = drop_columns(orig_df,0,col_name)
+	return df,credits
+	
 
 ######################################## d c done #################################################################
 
@@ -251,10 +251,15 @@ def drop_r(df,credits,row_index ):
 def convert_to_matrix(df,test=False):
 	""" X_train and X_test """
 	# Creating the Training and Test Set
+	temp_df = pd.DataFrame(df)
+	if(df.isnull().values.any()):
+		df = df.fillna(-1)
+
 	X = df.loc[:,df.columns!='SalePrice'] #Locates and Allocate all cols except last one
 	
 	# Convert to Numpy Array
 	X = X.values 
+	df = temp_df
 	
 	if(test == False):
 		Y = df['SalePrice']
@@ -275,16 +280,15 @@ def Model_Linear(X_train,Y_train,X_test):
 	train_y = train_y.flatten()
 	return Y_test,train_y
 
-def model_type(model_name,X_train,Y_train,X_test,credits,model_counter):
+def model_type(X_train,Y_train,X_test,credits,model_counter):
 	""" Which Model to call """
 
 	model_counter+=1
 	if(model_counter < 3):
-		Y_test = Model_Linear(X_train,Y_train,X_test)
+		Y_test,train_y = Model_Linear(X_train,Y_train,X_test)
 	else:
-		if(model_name == 'linear'):
-			credits -= 3000
-			Y_test,train_y = Model_Linear(X_train,Y_train,X_test)
+		credits -= 3000
+		Y_test,train_y = Model_Linear(X_train,Y_train,X_test)
 
 	return Y_test,train_y,credits
 
@@ -308,7 +312,7 @@ def Index(request):
 
 	if request.user.is_authenticated:
 		data = TableSet.objects.filter(user=request.user.id).first()
-		if data is None:
+		if data is not None:
 			df = load_data_init_train()
 			cre = Credits()
 			cre.user = request.user
@@ -488,14 +492,17 @@ def View_8(request):
 
 def View_9(request):
 	if request.method=="POST":
-		
+		input_val = int(request.POST['input_val'])
 		ts = TableSet.objects.filter(user=request.user.id).first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
-		X_train,Y_train = convert_to_matrix(df,test = False)
-		X_test = convert_to_matrix(df_test,test = True)
-		Y_test,train_y,credits = model_type(input_val,X_train,Y_train,X_test,credits,model_counter)
+		X_train,Y_train = convert_to_matrix(df[0:input_val],test = False)
+		X_test = convert_to_matrix(df[1000:],test = True)
+		true_pred = df['SalePrice']
+		true_pred = pd.DataFrame(true_pred)
+		true_pred = true_pred.values
+		Y_test,train_y,credits = model_type(X_train,Y_train,X_test,credits,model_counter)
 		test_acc = accuracy(Y_test,true_pred)
 		train_acc = accuracy(train_y,Y_train)
 		ts.data = df.to_string()
@@ -512,19 +519,36 @@ def View_9(request):
 def c_p(request):
 	if request.method=="POST":
 		
-		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint')
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
-		df = to_pd(ts.data)
-		ts.data = df.to_string()
+		credits = credits - 500
 		cr.credits = credits
 		ts.save()
+		cr.save()
+		tsn = TableSet()
+		tsn.data = ts.data
+		tsn.user_id = request.user.id
+		tsn.checkpoint = ts.checkpoint +1
+		tsn.save()
+		dic = {}
+		dic['credit'] = credits
+		dic['message'] = "Successful."
+		return HttpResponse(json.dumps(dic))
+
+def c_p_revert(request):
+	if request.method=="POST":
+		
+		ts = TableSet.objects.filter(user=request.user.id).first()
+		cr = Credits.objects.filter(user=request.user.id).first()
+		credits = cr.credits
+		credits = credits - 500
+		cr.credits = credits
+		ts.delete()
 		cr.save()
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
-		dic['acc_test'] = test_acc
-		dic['acc_train'] = train_acc
 		return HttpResponse(json.dumps(dic))
 
 

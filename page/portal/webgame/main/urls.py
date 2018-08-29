@@ -28,5 +28,7 @@ urlpatterns = [
     path('view_6', views.View_6, name='start'),
     path('view_7', views.View_7, name='start'),
     path('view_8', views.View_8, name='start'),
+    path('view_9', views.View_9, name='start'),
+    path('c_p', views.c_p, name='start'),
 ]
  

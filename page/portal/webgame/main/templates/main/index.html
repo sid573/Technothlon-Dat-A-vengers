@@ -20,7 +20,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 </div>
 <!-- Navigation Bar -->
 <div class="w3-bar w3-white w3-border-bottom w3-xlarge">
-  <button class="w3-bar-item w3-button tablink" onclick="view9();"><i class="fa fa-map w3-margin-right"></i> LINEAR REGRESSION </button>
   <button class="w3-bar-item w3-button tablink" ><i class="fa fa-plane w3-margin-right"></i>SCORE  </button><div id="creditse">{{credits}}</div>
 
 </div>
@@ -34,6 +33,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Fill Null Values');"><i class="fa fa-plane w3-margin-right"></i>Fill Null Values</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Drop Column');"><i class="fa fa-plane w3-margin-right"></i>Drop Column</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Drop Row');"><i class="fa fa-plane w3-margin-right"></i>Drop Row</button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'LinearReg');"><i class="fa fa-plane w3-margin-right"></i>Linear Regression</button>
 </div>
 
 <!-- Header -->
@@ -58,7 +58,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
         </div>
       </div>
       <p><button class="w3-button w3-dark-grey"  onclick="view1();">Add it bro...</button></p>
-    </div>
+    </div >
 <!--............................................................................................................. -->
 
     <div id="Null Values" class="w3-container w3-white w3-padding-16 myLink">
@@ -223,7 +223,18 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
         
       <p><button class="w3-button w3-dark-grey"  onclick="view8();">Drop</button></p>
     </div>
-
+</div>
+<!-- ----------------------------------------------------------------------------------------------------------- -->
+    <div id="LinearReg" class="w3-container w3-white w3-padding-16 myLink">
+      <h3> Finalizing </h3>
+      <div class="w3-row-padding" style="margin:0 -16px;">
+        <div class="w3-half">
+          <label>From</label>
+          <input class="w3-input w3-border" type="text" id="nr" placeholder="Lower Value">
+        </div>
+      </div>
+      <p><button class="w3-button w3-dark-grey"  onclick="view9();">GO</button></p>
+    </div>
 <!-- ------------------------------------------------------------------------------------------------------------ -->
 </header>
 
@@ -430,7 +441,7 @@ function view9(){
   $.ajax({
       type: "POST",
       url: "/view_9",
-      data: {csrfmiddlewaretoken:'{{ csrf_token }}'},
+      data: {'input_val':$("#nr").val(),csrfmiddlewaretoken:'{{ csrf_token }}'},
       success: function(resultData){
           var xz = JSON.parse(resultData);
           if(xz['credit']!="NA"){
@@ -440,6 +451,37 @@ function view9(){
           alert(xz["message"]);
           alert(xz["acc_test"]);
           alert(xz["p_test"]);
+
+      }
+  });
+}
+
+function cp(){
+  $.ajax({
+      type: "POST",
+      url: "/c_p",
+      data: {csrfmiddlewaretoken:'{{ csrf_token }}'},
+      success: function(resultData){
+          var xz = JSON.parse(resultData);
+          if(xz['credit']!="NA"){
+            $("#creditse").html(xz['credit']);
+          }
+
+      }
+  });
+}
+
+
+function cpr(){
+  $.ajax({
+      type: "POST",
+      url: "/c_p",
+      data: {csrfmiddlewaretoken:'{{ csrf_token }}'},
+      success: function(resultData){
+          var xz = JSON.parse(resultData);
+          if(xz['credit']!="NA"){
+            $("#creditse").html(xz['credit']);
+          }
 
       }
   });
