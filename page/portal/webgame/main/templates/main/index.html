@@ -15,19 +15,18 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 <body  bgcolor="black">
 
 <div class="w3-bar w3-white w3-border-bottom w3-xlarge" align="center">
-  <h1> <b>  X - MACHINIA </b></h1>
+  <h1> <b>  DAT-A-VENGERS </b></h1>
 
 </div>
 <!-- Navigation Bar -->
 <div class="w3-bar w3-white w3-border-bottom w3-xlarge">
-  <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'navbar');"><i class="fa fa-map w3-margin-right"></i>LET'S START</button>
-  <button class="w3-bar-item w3-button tablink" ><i class="fa fa-map w3-margin-right"></i> NUMPY ARRAY</button>
+  <button class="w3-bar-item w3-button tablink" onclick="view9();"><i class="fa fa-map w3-margin-right"></i> LINEAR REGRESSION </button>
   <button class="w3-bar-item w3-button tablink" ><i class="fa fa-plane w3-margin-right"></i>SCORE  </button><div id="creditse">{{credits}}</div>
 
 </div>
 
 <div class="w3-bar w3-white w3-border-bottom w3-xlarge">
-    <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Flight');"><i class="fa fa-plane w3-margin-right"></i>Data Loading</button>
+    <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Data Loading');"><i class="fa fa-plane w3-margin-right"></i>Data Loading</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Null Values');"><i class="fa fa-plane w3-margin-right"></i>Null Values</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Normalization');"><i class="fa fa-plane w3-margin-right"></i>Normalization</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Data Visualization');"><i class="fa fa-plane w3-margin-right"></i>Data Visualization</button>
@@ -40,17 +39,13 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 <!-- Header -->
 <header class="w3-display-container w3-content w3-hide-small" style="max-width:1500px" id="header">
   <div>
-    <img class="w3-image" src="/static/main.png" alt="London" width="1500" height="700">
-    
+    <img class="w3-image" src="/static/main.png" alt="London" width="1500" height="700">         
   </div>
   
   <div class="w3-display-middle" style="width:65%" >
-    <div class="w3-bar w3-black" >
-      
-    </div>
 
     <!-- Tabs -->
-    <div id="Flight" class="w3-container w3-white w3-padding-1 myLink">
+    <div id="Data Loading" class="w3-container w3-white w3-padding-1 myLink">
       <h3>Want to add extra data ? </h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-half">
@@ -233,25 +228,25 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 </header>
 
 <div>
+  <p><button class="w3-button w3-dark-grey" onclick="cp();"><b>CHECKPOINT</b></button></p>
   <br>
+  <br>
+  <br>
+  
 </div>
 
 <!-- Page content -->
-<div class="w3-content" style="max-width:1100px;" >
-  <div class="w3-row-padding w3-text-white w3-large">
-    <div class="w3-half w3-margin-bottom">
-      <div class="tcycle">
-        <img src="/static/im.jpg" alt="Cinque Terre" style="width:30%">
-        <img class="w3-image" src="/static/im2.jpeg" alt="London" style="width:30%">
-        <img class="w3-image" src="/static/im3.jpg" alt="London" style="width:30%">
-      </div>
-    </div>
+<div class="w3-content" style="max-width:1100px; overflow: scroll;" id="imgbox" >
+     
 </div>
 
-<div class="w3-container" id="dialog" title="basic dialog">
-  
-</div>
-<div id="try"></div>
+<div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
 </div>
 
 <!-- Footer -->
@@ -284,7 +279,7 @@ document.getElementsByClassName("tablink")[0].click();
 <script type="text/javascript">
   window.onload = function() {
     document.getElementById('null_col').style.display = 'none';
-    document.getElementById('navbar').style.display = ' none';
+
   };
 
   function showDiv(elem){
@@ -359,8 +354,8 @@ function view4(){
           resp = xz["graph"];
           var img = new Image();
           img.src = pre+resp;
-          $("#try").html(img);
-          alert(img);
+          $("#imgbox").html(img);
+          
       }
   });
 }
@@ -377,12 +372,11 @@ function view5(){
             $("#creditse").html(xz['credit']);
           }
           alert(xz["message"]);
-          pre = "data:image/jpg;base64,";
-          resp = xz["graph"];
-          var img = new Image();
-          img.src = pre+resp;
-          $("#dialog").html(img);
-          alert(img)
+           pre = "data:image/jpg;base64,";
+           resp = xz["graph"];
+           var img = new Image();
+           img.src = pre+resp;
+           $("#imgbox").html(img);
       }
   });
 }
@@ -428,6 +422,25 @@ function view8(){
             $("#creditse").html(xz['credit']);
           }
           alert(xz["message"]);
+      }
+  });
+}
+
+function view9(){
+  $.ajax({
+      type: "POST",
+      url: "/view_9",
+      data: {csrfmiddlewaretoken:'{{ csrf_token }}'},
+      success: function(resultData){
+          var xz = JSON.parse(resultData);
+          if(xz['credit']!="NA"){
+            $("#creditse").html(xz['credit']);
+          }
+
+          alert(xz["message"]);
+          alert(xz["acc_test"]);
+          alert(xz["p_test"]);
+
       }
   });
 }

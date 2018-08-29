@@ -6,7 +6,9 @@ import json
 ##############################################
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 from sklearn import metrics
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
@@ -15,6 +17,7 @@ import io
 import base64
 ###############################################
 
+model_counter = 0
 
 def load_data_init_train():
 	""" Creating the DataFrames """
@@ -41,7 +44,7 @@ def load_data_in_train(x1,x2,credits):
 		#print("Dont cross your limits!!")
 		return None
 	cdf = df[x1:x2]
-	credits -= ((x2 - x1) * 2)
+	credits -= ((x2 - x1) * 5)
 	return cdf,credits
 
 def append_data(df, x1 , x2 , credits):
@@ -57,18 +60,18 @@ def append_data(df, x1 , x2 , credits):
 def see_null_each(df,credits):
 	"""Nullity check """
 
-	credits -= 100
+	credits -= 1500
 	return credits
 
 def null_sum(df,col_name,credits):
 	""" Number of Null in Cols """
-	credits -= 50
+	credits -= 300
 	return credits
 
 
 def null_any(df,credits):
 	""" Number of Columns having NULL """
-	credits -= 300
+	credits -= 800
 	return credits
 
 
@@ -87,18 +90,18 @@ def check_null(df,input_val,credits,col_name = None ):
 ############################################ normalization ################################################
 
 def better_normalization(df,col_name,credits):
-	Normalization = 100
+	Normalization = 400
 	credits = credits - Normalization
 	df[col_name] = ((df[col_name] - df[col_name].mean())/df[col_name].std())
 	return df,credits
 
 def mean_normalization(df,col_name,credits):
-	credits = credits - 50
+	credits = credits - 400
 	df[col_name] = (df[col_name] - df[col_name].mean())
 	return df,credits
 
 def std_normalization(df,col_name,credits):
-	credits = credits - 20
+	credits = credits - 400
 	df[col_name] = df[col_name] / df[col_name].std()
 	return df,credits 
 
@@ -168,6 +171,7 @@ def bar2(df,credits):
 def null_graph(df,credits,input_val):
 	""" Which Missing No Grpah to Call """
 	# Graphs are Sexy but are not very Sizzling Hot #
+
 	if(input_val == 1):
 		pl,credits = matrix2(df,credits)
 	elif(input_val == 2):
@@ -176,7 +180,7 @@ def null_graph(df,credits,input_val):
 		pl,credits = dendrogram2(df,credits)
 	else:
 		pl,credits = bar2(df,credits)
-	
+		
 	buf = io.BytesIO()
 	plt.savefig(buf, format='jpg')
 	image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
@@ -242,6 +246,53 @@ def drop_r(df,credits,row_index ):
 	orig_df,_ = drop_rows(orig_df,0,row_index)
 
 ################################################ d r Done ########################################################
+
+################################################## NUMPY MATRIX ################################################
+def convert_to_matrix(df,test=False):
+	""" X_train and X_test """
+	# Creating the Training and Test Set
+	X = df.loc[:,df.columns!='SalePrice'] #Locates and Allocate all cols except last one
+	
+	# Convert to Numpy Array
+	X = X.values 
+	
+	if(test == False):
+		Y = df['SalePrice']
+		Y = Y.values
+		return X,Y
+	else:
+		return X
+
+################################################### N  M done ##################################################
+
+############################################### LINEAR MODEL #####################################################
+def Model_Linear(X_train,Y_train,X_test):
+	lm = LinearRegression()
+	model = lm.fit(X_train,Y_train)
+	Y_test = model.predict(X_test)
+	Y_test = Y_test.flatten()
+	train_y = model.predict(X_train)
+	train_y = train_y.flatten()
+	return Y_test,train_y
+
+def model_type(model_name,X_train,Y_train,X_test,credits,model_counter):
+	""" Which Model to call """
+
+	model_counter+=1
+	if(model_counter < 3):
+		Y_test = Model_Linear(X_train,Y_train,X_test)
+	else:
+		if(model_name == 'linear'):
+			credits -= 3000
+			Y_test,train_y = Model_Linear(X_train,Y_train,X_test)
+
+	return Y_test,train_y,credits
+
+def accuracy(Y_test,true_pred):
+	""" Accuracy """
+	val = metrics.explained_variance_score(Y_test,true_pred)
+	return val * 100
+######################################################LM done ###################################################
 
 
 def Start(request):
@@ -434,3 +485,46 @@ def View_8(request):
 		dic['credit'] = credits
 		dic['message'] = "Successful."
 		return HttpResponse(json.dumps(dic))
+
+def View_9(request):
+	if request.method=="POST":
+		
+		ts = TableSet.objects.filter(user=request.user.id).first()
+		cr = Credits.objects.filter(user=request.user.id).first()
+		credits = cr.credits
+		df = to_pd(ts.data)
+		X_train,Y_train = convert_to_matrix(df,test = False)
+		X_test = convert_to_matrix(df_test,test = True)
+		Y_test,train_y,credits = model_type(input_val,X_train,Y_train,X_test,credits,model_counter)
+		test_acc = accuracy(Y_test,true_pred)
+		train_acc = accuracy(train_y,Y_train)
+		ts.data = df.to_string()
+		cr.credits = credits
+		ts.save()
+		cr.save()
+		dic = {}
+		dic['credit'] = credits
+		dic['message'] = "Successful."
+		dic['acc_test'] = test_acc
+		dic['acc_train'] = train_acc
+		return HttpResponse(json.dumps(dic))
+
+def c_p(request):
+	if request.method=="POST":
+		
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint')
+		cr = Credits.objects.filter(user=request.user.id).first()
+		credits = cr.credits
+		df = to_pd(ts.data)
+		ts.data = df.to_string()
+		cr.credits = credits
+		ts.save()
+		cr.save()
+		dic = {}
+		dic['credit'] = credits
+		dic['message'] = "Successful."
+		dic['acc_test'] = test_acc
+		dic['acc_train'] = train_acc
+		return HttpResponse(json.dumps(dic))
+
+
