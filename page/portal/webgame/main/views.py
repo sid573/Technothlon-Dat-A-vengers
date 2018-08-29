@@ -17,7 +17,7 @@ import io
 import base64
 ###############################################
 
-model_counter = 0
+
 
 def load_data_init_train():
 	""" Creating the DataFrames """
@@ -269,7 +269,7 @@ def convert_to_matrix(df,test=False):
 		return X
 
 ################################################### N  M done ##################################################
-
+model_counter = 0
 ############################################### LINEAR MODEL #####################################################
 def Model_Linear(X_train,Y_train,X_test):
 	lm = LinearRegression()
@@ -501,7 +501,9 @@ def View_9(request):
 		X_test = convert_to_matrix(df[1000:],test = True)
 		true_pred = df['SalePrice']
 		true_pred = pd.DataFrame(true_pred)
+		true_pred = true_pred[1000:]
 		true_pred = true_pred.values
+
 		Y_test,train_y,credits = model_type(X_train,Y_train,X_test,credits,model_counter)
 		test_acc = accuracy(Y_test,true_pred)
 		train_acc = accuracy(train_y,Y_train)
@@ -514,6 +516,7 @@ def View_9(request):
 		dic['message'] = "Successful."
 		dic['acc_test'] = test_acc
 		dic['acc_train'] = train_acc
+		dic['c']= model_counter
 		return HttpResponse(json.dumps(dic))
 
 def c_p(request):
