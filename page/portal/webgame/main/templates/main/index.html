@@ -3,11 +3,11 @@
 <title> WELCOME </title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="/static/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="http://malsup.github.com/jquery.tcycle.js"></script>
+<link rel="stylesheet" href="/static/font-awesome.min.css">
+<script src="/static/jquery.min.js"></script>
+<script src="/static/jquery.tcycle.js"></script>
 <style>
 body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 .myLink {display: none}
@@ -20,7 +20,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 </div>
 <!-- Navigation Bar -->
 <div class="w3-bar w3-white w3-border-bottom w3-xlarge">
-  <button class="w3-bar-item w3-button tablink" ><i class="fa fa-plane w3-margin-right"></i>SCORE  </button><div id="creditse">{{credits}}</div>
+  <button class="w3-bar-item w3-button tablink" ><i class="fa fa-plane w3-margin-right"></i>Credit  </button><div id="creditse">{{credits}}</div>
 
 </div>
 
@@ -218,9 +218,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 <div>
   <p><button class="w3-button w3-dark-grey" onclick="cp();"><b>CHECKPOINT</b></button></p>
   <p><button class="w3-button w3-dark-grey" onclick="cpr();"><b>REVERT</b></button></p>
-  <p><button class="w3-button w3-dark-grey" onclick="cpr();"><b>TEST ACCURACY</b></button></p>
+  <p><button class="w3-button w3-dark-grey" onclick="test();"><b>TEST ACCURACY</b></button></p>
   <br>
   <br>
+  <div id="texta">
+    
+  </div>
   <br>
   
 </div>
@@ -279,7 +282,23 @@ document.getElementsByClassName("tablink")[0].click();
     document.getElementById('null_col').style.display = 'none';
 
 }
+function isJson(item) {
+    item = typeof item !== "string"
+        ? JSON.stringify(item)
+        : item;
 
+    try {
+        item = JSON.parse(item);
+    } catch (e) {
+        return false;
+    }
+
+    if (typeof item === "object" && item !== null) {
+        return true;
+    }
+
+    return false;
+}
 
 // var xzz;
 function view2(){
@@ -293,8 +312,25 @@ function view2(){
           if(xm['credit']!="NA"){
             $("#creditse").html(xm['credit']);
           }
+          if(isJson(xm["data"])){
+
+              var tbl=$("<table/>").attr("id","mytable");
+              $("#texta").html(tbl);
+                    for(var y in xm["data"]){
+                  var tr="<tr>";
+                  var td1="<td style='color:white'>"+y+"</td>";
+                  var td3="<td style='color:white'>"+xm["data"][y]+"</td></tr>";
+
+                 $("#mytable").append(tr+td1+td3); 
+
+              }
+          }
+          else{
+            
+              $("#texta").html('<p style="color:white;">'+xm["data"]+'</p>');
+          }
+
           alert(xm["message"]);
-          alert(xm["data"]);
       }
   });
 }
@@ -326,7 +362,7 @@ function view4(){
           if(xz['credit']!="NA"){
             $("#creditse").html(xz['credit']);
           }
-          alert(xz["message"]);
+          alert("Status: " + xz["message"]);
           pre = "data:image/jpg;base64,";
           resp = xz["graph"];
           var img = new Image();
@@ -348,7 +384,7 @@ function view5(){
           if(xz['credit']!="NA"){
             $("#creditse").html(xz['credit']);
           }
-          alert(xz["message"]);
+          alert("Status: " + xz["message"]);
            pre = "data:image/jpg;base64,";
            resp = xz["graph"];
            var img = new Image();
@@ -368,7 +404,7 @@ function view6(){
           if(xz['credit']!="NA"){
             $("#creditse").html(xz['credit']);
           }
-          alert(xz["message"]);
+          alert("Status: " + xz["message"]);
       }
   });
 }
@@ -383,7 +419,7 @@ function view7(){
           if(xz['credit']!="NA"){
             $("#creditse").html(xz['credit']);
           }
-          alert(xz["message"]);
+          alert("Status: " + xz["message"]);
       }
   });
 }
@@ -399,13 +435,11 @@ function view9(){
             $("#creditse").html(xz['credit']);
           }
 
-          alert(xz["message"]);
+          alert("Status: " + xz["message"]);
           //alert(xz["acc_test"]);
           alert(xz["acc_train"]);
           alert(xz["c"]);
-          if(xz['c'] < 4){
-            alert(xz["acc_test"]);
-          }          
+        
       }
   });
 }
@@ -420,7 +454,7 @@ function cp(){
           if(xz['credit']!="NA"){
             $("#creditse").html(xz['credit']);
           }
-          alert(xz["message"]);
+          alert("Status: " + xz["message"]);
       }
   });
 }
@@ -436,7 +470,25 @@ function cpr(){
           if(xz['credit']!="NA"){
             $("#creditse").html(xz['credit']);
           }
-          alert(xz["message"]);
+          alert("Status: " + xz["message"]);
+      }
+  });
+}
+
+function test(){
+  $.ajax({
+      type: "POST",
+      url: "/Test_acc",
+      data: {csrfmiddlewaretoken:'{{ csrf_token }}'},
+      success: function(resultData){
+          var xz = JSON.parse(resultData);
+          if(xz['credit']!="NA"){
+            $("#creditse").html(xz['credit']);
+          }
+
+          alert("Status: " + xz["message"]);
+          alert(xz["test_acc"])
+          alert(xz["test_num"])
       }
   });
 }

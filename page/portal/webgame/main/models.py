@@ -7,7 +7,9 @@ class TableSet(models.Model):
 	data = models.TextField()
 	checkpoint = models.IntegerField(default=0)
 	free_service = models.IntegerField(default=0)
+	test_store = models.TextField(default=0)
+	test_cal = models.IntegerField(default=0)
 
 class Credits(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	credits = models.IntegerField(default=10000)
+	credits = models.IntegerField(default=1000000)

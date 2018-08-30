@@ -120,13 +120,13 @@ def normalization(df,input_val,credits,col_name):
 
 def line(df,credits,col_name):
 	""" Line Graph per column"""
-	line = 50 
+	line = 300
 	credits = credits - line 
 	return df[col_name].plot(x = df.shape[0] , y = df.shape[1] , kind = 'line'),credits
 
 def histogram(df,credits , col_name):
 	""" Histogram for Whole Data """
-	hist = 500 
+	hist = 250 
 	credits = credits - hist 
 	return df[col_name].plot(x = df.shape[1] , y = df.shape[0] ,kind = 'hist'),credits
 
@@ -150,22 +150,22 @@ def draw_graph(df,credits,input_val,col_name ):
 
 ################################################# null graph ####################################################
 def matrix2(df,credits):
- 	matrix3 = 500
+ 	matrix3 = 600
  	credits = credits - matrix3
  	return msno.matrix(df.sample(df.shape[0])),credits
 
 def heatmap2(df,credits):
- 	heatmap3 = 400
+ 	heatmap3 = 1000
  	credits = credits - heatmap3
  	return msno.heatmap(df.sample(df.shape[0])),credits	
 
 def dendrogram2(df,credits):
- 	dendrogram3 = 400
+ 	dendrogram3 = 700
  	credits = credits - dendrogram3
  	return msno.dendrogram(df.sample(df.shape[0])),credits
 
 def bar2(df,credits):
-	bar3 = 700
+	bar3 = 900
 	credits = credits - bar3
 	return msno.bar(df.sample(df.shape[0])),credits
 
@@ -196,19 +196,19 @@ def null_graph(df,credits,input_val):
 def mean_null(df,credits,col_name):
 	""" Fill NUll values with mean"""
 	df[col_name] = df[col_name].fillna(df[col_name].mean())
-	credits -= 400
+	credits -= 300
 	return df,credits
 
 def zero_null(df,credits,col_name):
 	""" Fill Null with 0's """
 	df[col_name] = df[col_name].fillna(0)
-	credits -= 100
+	credits -= 300
 	return df,credits
 
 def std_null(df,credits,col_name):
 	""" Fill NUll values with standard deviation """
 	df[col_name] = df[col_name].fillna(df[col_name].std())
-	credits -= 250
+	credits -= 300
 	return df,credits
 
 def fill_null(df,credits,input_val,col_name):
@@ -227,7 +227,7 @@ def fill_null(df,credits,input_val,col_name):
 def drop_columns(df,credits,col_name):
 	""" Cols to be Dropped """
 	df = df.drop(col_name,axis = 1)
-	credits -= 50
+	credits -= 700
 	return df,credits
 
 def drop_col(df,credits,col_name):
@@ -500,6 +500,7 @@ def View_9(request):
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
+		credits = credits - 5*input_val
 		X_train,Y_train = convert_to_matrix(df[0:input_val],test = False)
 		X_test = convert_to_matrix(df[1000:],test = True)
 		true_pred = df['SalePrice']
@@ -507,11 +508,14 @@ def View_9(request):
 		true_pred = true_pred[1000:]
 		true_pred = true_pred.values
 		free_service = ts.free_service
+		test_store = ts.test_store
 		Y_test,train_y,credits, free_service = model_type(X_train,Y_train,X_test,credits,free_service)
 		test_acc = accuracy(Y_test,true_pred)
 		train_acc = accuracy(train_y,Y_train)
 		ts.data = df.to_string()
+		test_store = test_acc
 		ts.free_service = free_service
+		ts.test_store = test_store
 		cr.credits = credits
 		ts.save()
 		cr.save()
@@ -534,7 +538,7 @@ def c_p(request):
 		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
-		credits = credits - 500
+		credits = credits - 2000
 		cr.credits = credits
 		ts.save()
 		cr.save()
@@ -574,31 +578,25 @@ def c_p_revert(request):
 
 
 def Test_acc(request):
-	if request.method=="POST":
-		input_val = int(request.POST['input_val'])
-		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
-		cr = Credits.objects.filter(user=request.user.id).first()
-		credits = cr.credits
-		df = to_pd(ts.data)
-		X_train,Y_train = convert_to_matrix(df[0:input_val],test = False)
-		X_test = convert_to_matrix(df[1000:],test = True)
-		true_pred = df['SalePrice']
-		true_pred = pd.DataFrame(true_pred)
-		true_pred = true_pred[1000:]
-		true_pred = true_pred.values
-		free_service = ts.free_service
-		Y_test,train_y,credits, free_service = model_type(X_train,Y_train,X_test,credits,free_service)
-		test_acc = accuracy(Y_test,true_pred)
-		train_acc = accuracy(train_y,Y_train)
-		ts.data = df.to_string()
-		ts.free_service = free_service
-		cr.credits = credits
-		ts.save()
-		cr.save()
-		dic = {}
-		dic['credit'] = credits
-		dic['message'] = "Successful."
-		dic['acc_test'] = test_acc
-		dic['acc_train'] = train_acc
-		dic['c']= free_service
+	ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
+	cr = Credits.objects.filter(user=request.user.id).first()
+
+	test_store =  ts.test_store
+	test_cal = ts.test_cal
+	test_cal = test_cal + 1
+	ts.test_cal = test_cal
+	ts.save()
+	dic = {}
+	dicr = {}
+	dic['test_acc'] = test_store
+	dic['test_num'] = test_cal
+	dic['message'] = "Successful"
+	dicr['test_acc'] = ""
+	dicr['test_num'] = test_cal
+	dicr['message'] = "SORRY YOU HAVE EXCEEDED YOUR LIMITS"
+	
+	
+	if(test_cal < 4):
 		return HttpResponse(json.dumps(dic))
+	else:
+		return HttpResponse(json.dumps(dicr))

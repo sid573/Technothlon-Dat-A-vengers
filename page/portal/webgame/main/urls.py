@@ -31,5 +31,6 @@ urlpatterns = [
     path('view_9', views.View_9, name='start'),
     path('c_p', views.c_p, name='start'),
     path('c_p_revert', views.c_p_revert, name='start'),
+    path('Test_acc', views.Test_acc, name='start'),
 ]
  
