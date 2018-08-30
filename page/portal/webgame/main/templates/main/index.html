@@ -25,14 +25,14 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 </div>
 
 <div class="w3-bar w3-white w3-border-bottom w3-xlarge">
-    <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Data Loading');"><i class="fa fa-plane w3-margin-right"></i>Data Loading</button>
+    
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Null Values');"><i class="fa fa-plane w3-margin-right"></i>Null Values</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Normalization');"><i class="fa fa-plane w3-margin-right"></i>Normalization</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Data Visualization');"><i class="fa fa-plane w3-margin-right"></i>Data Visualization</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Missing Number Visualization');"><i class="fa fa-plane w3-margin-right"></i>Missing Number Visualization</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Fill Null Values');"><i class="fa fa-plane w3-margin-right"></i>Fill Null Values</button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Drop Column');"><i class="fa fa-plane w3-margin-right"></i>Drop Column</button>
-      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Drop Row');"><i class="fa fa-plane w3-margin-right"></i>Drop Row</button>
+      
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'LinearReg');"><i class="fa fa-plane w3-margin-right"></i>Linear Regression</button>
 </div>
 
@@ -45,20 +45,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
   <div class="w3-display-middle" style="width:65%" >
 
     <!-- Tabs -->
-    <div id="Data Loading" class="w3-container w3-white w3-padding-1 myLink">
-      <h3>Want to add extra data ? </h3>
-      <div class="w3-row-padding" style="margin:0 -16px;">
-        <div class="w3-half">
-          <label>From</label>
-          <input class="w3-input w3-border" type="text" id="low" placeholder="Lower Value">
-        </div>
-        <div class="w3-half">
-          <label>To</label>
-          <input class="w3-input w3-border" type="text" id="high" placeholder="Higher Value">
-        </div>
-      </div>
-      <p><button class="w3-button w3-dark-grey"  onclick="view1();">Add it bro...</button></p>
-    </div >
+    
 <!--............................................................................................................. -->
 
     <div id="Null Values" class="w3-container w3-white w3-padding-16 myLink">
@@ -213,17 +200,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
     </div>
 <!--............................................................................................................. -->
 
-    <div id="Drop Row" class="w3-container w3-white w3-padding-16 myLink">
-      <h3>Want to drop a Row ? </h3>
-      <div class="w3-row-padding" style="margin:0 -16px;">
-        <div class="w3-half">
-          <label>From</label>
-          <input class="w3-input w3-border" type="text" id="row" placeholder="Row Number">
-        </div>
-        
-      <p><button class="w3-button w3-dark-grey"  onclick="view8();">Drop</button></p>
-    </div>
-</div>
+    
 <!-- ----------------------------------------------------------------------------------------------------------- -->
     <div id="LinearReg" class="w3-container w3-white w3-padding-16 myLink">
       <h3> Finalizing </h3>
@@ -240,6 +217,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 
 <div>
   <p><button class="w3-button w3-dark-grey" onclick="cp();"><b>CHECKPOINT</b></button></p>
+  <p><button class="w3-button w3-dark-grey" onclick="cpr();"><b>REVERT</b></button></p>
   <br>
   <br>
   <br>
@@ -301,20 +279,7 @@ document.getElementsByClassName("tablink")[0].click();
 
 }
 
-function view1(){
-  $.ajax({
-      type: "POST",
-      url: "/view_1",
-      data: {'low':$("#low").val(),'high':$("#high").val(),csrfmiddlewaretoken:'{{ csrf_token }}'},
-      success: function(resultData){
-          var xz = JSON.parse(resultData);
-          if(xz['credit']!="NA"){
-            $("#creditse").html(xz['credit']);
-          }
-          alert(xz["message"]);
-      }
-  });
-}
+
 // var xzz;
 function view2(){
   $.ajax({
@@ -422,21 +387,6 @@ function view7(){
   });
 }
 
-function view8(){
-  $.ajax({
-      type: "POST",
-      url: "/view_8",
-      data: {'input_val':$("#row").val(),csrfmiddlewaretoken:'{{ csrf_token }}'},
-      success: function(resultData){
-          var xz = JSON.parse(resultData);
-          if(xz['credit']!="NA"){
-            $("#creditse").html(xz['credit']);
-          }
-          alert(xz["message"]);
-      }
-  });
-}
-
 function view9(){
   $.ajax({
       type: "POST",
@@ -449,10 +399,12 @@ function view9(){
           }
 
           alert(xz["message"]);
-          alert(xz["acc_test"]);
+          //alert(xz["acc_test"]);
           alert(xz["acc_train"]);
           alert(xz["c"]);
-
+          if(xz['c'] < 4){
+            alert(xz["acc_test"]);
+          }          
       }
   });
 }
@@ -467,7 +419,7 @@ function cp(){
           if(xz['credit']!="NA"){
             $("#creditse").html(xz['credit']);
           }
-
+          alert(xz["message"]);
       }
   });
 }
@@ -476,14 +428,14 @@ function cp(){
 function cpr(){
   $.ajax({
       type: "POST",
-      url: "/c_p",
+      url: "/c_p_revert",
       data: {csrfmiddlewaretoken:'{{ csrf_token }}'},
       success: function(resultData){
           var xz = JSON.parse(resultData);
           if(xz['credit']!="NA"){
             $("#creditse").html(xz['credit']);
           }
-
+          alert(xz["message"]);
       }
   });
 }

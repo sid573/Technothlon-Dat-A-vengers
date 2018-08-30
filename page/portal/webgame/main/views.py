@@ -269,7 +269,7 @@ def convert_to_matrix(df,test=False):
 		return X
 
 ################################################### N  M done ##################################################
-model_counter = 0
+
 ############################################### LINEAR MODEL #####################################################
 def Model_Linear(X_train,Y_train,X_test):
 	lm = LinearRegression()
@@ -280,17 +280,17 @@ def Model_Linear(X_train,Y_train,X_test):
 	train_y = train_y.flatten()
 	return Y_test,train_y
 
-def model_type(X_train,Y_train,X_test,credits,model_counter):
+def model_type(X_train,Y_train,X_test,credits,free_service):
 	""" Which Model to call """
 
-	model_counter+=1
-	if(model_counter < 3):
+	if(free_service < 3):
 		Y_test,train_y = Model_Linear(X_train,Y_train,X_test)
 	else:
 		credits -= 3000
 		Y_test,train_y = Model_Linear(X_train,Y_train,X_test)
 
-	return Y_test,train_y,credits
+	free_service = free_service +1
+	return Y_test,train_y,credits, free_service
 
 def accuracy(Y_test,true_pred):
 	""" Accuracy """
@@ -312,7 +312,7 @@ def Index(request):
 
 	if request.user.is_authenticated:
 		data = TableSet.objects.filter(user=request.user.id).first()
-		if data is not None:
+		if data is None:
 			df = load_data_init_train()
 			cre = Credits()
 			cre.user = request.user
@@ -321,7 +321,7 @@ def Index(request):
 			dat.user = request.user
 			dat.data = df.to_string()
 			dat.save()
-			return HttpResponse("Initialized")
+			return HttpResponseRedirect('/start')
 		else:
 			return HttpResponseRedirect('/start')
 	else:
@@ -331,7 +331,7 @@ def View_1(request):
 	if request.method=="POST":
 		low = request.POST['low']
 		high = request.POST['high']
-		ts = TableSet.objects.filter(user=request.user.id).first()
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
@@ -350,7 +350,7 @@ def View_2(request):
 		store = ""
 		input_val = request.POST['input_val']
 		col = request.POST['col']
-		ts = TableSet.objects.filter(user=request.user.id).first()
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		df = to_pd(ts.data)
 		credits = cr.credits
@@ -382,7 +382,7 @@ def View_3(request):
 	if request.method=="POST":
 		input_val = int(request.POST['input_val'])
 		col = request.POST['col']
-		ts = TableSet.objects.filter(user=request.user.id).first()
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
@@ -402,7 +402,7 @@ def View_4(request):
 	if request.method=="POST":
 		input_val = int( request.POST['input_val'])
 		col = request.POST['col']
-		ts = TableSet.objects.filter(user=request.user.id).first()
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
@@ -421,7 +421,7 @@ def View_4(request):
 def View_5(request):
 	if request.method=="POST":
 		input_val = int(request.POST['input_val'])
-		ts = TableSet.objects.filter(user=request.user.id).first()
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
@@ -442,7 +442,7 @@ def View_6(request):
 	if request.method=="POST":
 		input_val = int(request.POST['input_val'])
 		col = request.POST['col']
-		ts = TableSet.objects.filter(user=request.user.id).first()
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
@@ -459,7 +459,7 @@ def View_6(request):
 def View_7(request):
 	if request.method=="POST":
 		col = request.POST['col']
-		ts = TableSet.objects.filter(user=request.user.id).first()
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
@@ -476,7 +476,7 @@ def View_7(request):
 def View_8(request):
 	if request.method=="POST":
 		input_val = request.POST['input_val']
-		ts = TableSet.objects.filter(user=request.user.id).first()
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
@@ -493,7 +493,7 @@ def View_8(request):
 def View_9(request):
 	if request.method=="POST":
 		input_val = int(request.POST['input_val'])
-		ts = TableSet.objects.filter(user=request.user.id).first()
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
@@ -503,11 +503,12 @@ def View_9(request):
 		true_pred = pd.DataFrame(true_pred)
 		true_pred = true_pred[1000:]
 		true_pred = true_pred.values
-
-		Y_test,train_y,credits = model_type(X_train,Y_train,X_test,credits,model_counter)
+		free_service = ts.free_service
+		Y_test,train_y,credits, free_service = model_type(X_train,Y_train,X_test,credits,free_service)
 		test_acc = accuracy(Y_test,true_pred)
 		train_acc = accuracy(train_y,Y_train)
 		ts.data = df.to_string()
+		ts.free_service = free_service
 		cr.credits = credits
 		ts.save()
 		cr.save()
@@ -516,12 +517,17 @@ def View_9(request):
 		dic['message'] = "Successful."
 		dic['acc_test'] = test_acc
 		dic['acc_train'] = train_acc
-		dic['c']= model_counter
+		dic['c']= free_service
 		return HttpResponse(json.dumps(dic))
 
 def c_p(request):
 	if request.method=="POST":
 		
+		cn = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').count()
+		while cn>=2:
+			ts = TableSet.objects.filter(user=request.user.id).order_by('checkpoint').first().delete()
+			cn = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').count()
+
 		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
@@ -542,16 +548,25 @@ def c_p(request):
 def c_p_revert(request):
 	if request.method=="POST":
 		
-		ts = TableSet.objects.filter(user=request.user.id).first()
-		cr = Credits.objects.filter(user=request.user.id).first()
-		credits = cr.credits
-		credits = credits - 500
-		cr.credits = credits
-		ts.delete()
-		cr.save()
-		dic = {}
-		dic['credit'] = credits
-		dic['message'] = "Successful."
-		return HttpResponse(json.dumps(dic))
+		cn = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').count()
+		if cn>1:		
+			ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
+			cr = Credits.objects.filter(user=request.user.id).first()
+			credits = cr.credits
+			credits = credits - 500
+			cr.credits = credits
+			ts.delete()
+			cr.save()
+			dic = {}
+			dic['credit'] = credits
+			dic['message'] = "Successful."
+			return HttpResponse(json.dumps(dic))
+		else:		
+			dic = {}
+			cr = Credits.objects.filter(user=request.user.id).first()
+			credits = cr.credits
+			dic['credit'] = credits
+			dic['message'] = "No Previous Checkpoint."
+			return HttpResponse(json.dumps(dic))
 
 

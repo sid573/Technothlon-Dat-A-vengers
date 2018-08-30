@@ -6,6 +6,7 @@ class TableSet(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	data = models.TextField()
 	checkpoint = models.IntegerField(default=0)
+	free_service = models.IntegerField(default=0)
 
 class Credits(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
