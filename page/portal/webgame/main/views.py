@@ -132,11 +132,14 @@ def histogram(df,credits , col_name):
 
 def draw_graph(df,credits,input_val,col_name ):
 	""" Which Graph """
+	plt.clf()
+	plt.cla()
+	plt.close()
 	if(input_val == 1):
 		pl,credits = line(df,credits,col_name)
 	else:
 		pl,credits = histogram(df,credits , col_name)
-
+	
 	buf = io.BytesIO()
 	plt.savefig(buf, format='jpg')
 	image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
@@ -570,3 +573,32 @@ def c_p_revert(request):
 			return HttpResponse(json.dumps(dic))
 
 
+def Test_acc(request):
+	if request.method=="POST":
+		input_val = int(request.POST['input_val'])
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
+		cr = Credits.objects.filter(user=request.user.id).first()
+		credits = cr.credits
+		df = to_pd(ts.data)
+		X_train,Y_train = convert_to_matrix(df[0:input_val],test = False)
+		X_test = convert_to_matrix(df[1000:],test = True)
+		true_pred = df['SalePrice']
+		true_pred = pd.DataFrame(true_pred)
+		true_pred = true_pred[1000:]
+		true_pred = true_pred.values
+		free_service = ts.free_service
+		Y_test,train_y,credits, free_service = model_type(X_train,Y_train,X_test,credits,free_service)
+		test_acc = accuracy(Y_test,true_pred)
+		train_acc = accuracy(train_y,Y_train)
+		ts.data = df.to_string()
+		ts.free_service = free_service
+		cr.credits = credits
+		ts.save()
+		cr.save()
+		dic = {}
+		dic['credit'] = credits
+		dic['message'] = "Successful."
+		dic['acc_test'] = test_acc
+		dic['acc_train'] = train_acc
+		dic['c']= free_service
+		return HttpResponse(json.dumps(dic))
