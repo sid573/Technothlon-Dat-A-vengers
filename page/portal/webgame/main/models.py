@@ -9,7 +9,13 @@ class TableSet(models.Model):
 	free_service = models.IntegerField(default=0)
 	test_store = models.TextField(default=0)
 	test_cal = models.IntegerField(default=0)
+	
 
 class Credits(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	credits = models.IntegerField(default=1000000)
+
+class Logs(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	log = models.TextField()
+	created_at = models.DateTimeField(auto_now_add=True)

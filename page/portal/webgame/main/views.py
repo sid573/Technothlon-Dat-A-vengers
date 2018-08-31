@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .models import TableSet, Credits
+from .models import TableSet, Credits , Logs
 from pandas.compat import StringIO
 import json 
 ##############################################
@@ -15,9 +15,17 @@ from sklearn import linear_model
 import missingno as msno
 import io
 import base64
+
 ###############################################
 
 
+
+def create_log(user_id,data):
+	lf = Logs()
+	lf.log = ''.join(data)
+	#lf.log = data.to_string()
+	lf.user = user_id
+	lf.save()
 
 def load_data_init_train():
 	""" Creating the DataFrames """
@@ -255,8 +263,8 @@ def convert_to_matrix(df,test=False):
 	""" X_train and X_test """
 	# Creating the Training and Test Set
 	temp_df = pd.DataFrame(df)
-	if(df.isnull().values.any()):
-		df = df.fillna(-1)
+	
+		
 
 	X = df.loc[:,df.columns!='SalePrice'] #Locates and Allocate all cols except last one
 	
@@ -304,8 +312,11 @@ def accuracy(Y_test,true_pred):
 
 def Start(request):
 	if request.user.is_authenticated:
+		ts = TableSet.objects.filter(user=request.user.id).order_by('-checkpoint').first()
 		credit = Credits.objects.filter(user=request.user.id).first()
-		columns = ["MSSubClass","MSZoning","LotFrontage","LotArea","Street","Alley","LotShape","LandContour","Utilities","LotConfig","LandSlope","Neighborhood","Condition1","Condition2","BldgType","HouseStyle","OverallQual","OverallCond","YearBuilt","YearRemodAdd","RoofStyle","RoofMatl","Exterior1st","Exterior2nd","MasVnrType","MasVnrArea","ExterQual","ExterCond","Foundation","BsmtQual","BsmtCond","BsmtExposure","BsmtFinType1","BsmtFinSF1","BsmtFinType2","BsmtFinSF2","BsmtUnfSF","TotalBsmtSF","Heating","HeatingQC","CentralAir","Electrical","1stFlrSF","2ndFlrSF","LowQualFinSF","GrLivArea","BsmtFullBath","BsmtHalfBath","FullBath","HalfBath","BedroomAbvGr","KitchenAbvGr","KitchenQual","TotRmsAbvGrd","Functional","Fireplaces","FireplaceQu","GarageType","GarageYrBlt","GarageFinish","GarageCars","GarageArea","GarageQual","GarageCond","PavedDrive","WoodDeckSF","OpenPorchSF","EnclosedPorch","3SsnPorch","ScreenPorch","PoolArea","PoolQC","Fence","MiscFeature","MiscVal","MoSold","YrSold","SaleType","SaleCondition","SalePrice"]
+		# columns = ["MSSubClass","MSZoning","LotFrontage","LotArea","Street","Alley","LotShape","LandContour","Utilities","LotConfig","LandSlope","Neighborhood","Condition1","Condition2","BldgType","HouseStyle","OverallQual","OverallCond","YearBuilt","YearRemodAdd","RoofStyle","RoofMatl","Exterior1st","Exterior2nd","MasVnrType","MasVnrArea","ExterQual","ExterCond","Foundation","BsmtQual","BsmtCond","BsmtExposure","BsmtFinType1","BsmtFinSF1","BsmtFinType2","BsmtFinSF2","BsmtUnfSF","TotalBsmtSF","Heating","HeatingQC","CentralAir","Electrical","1stFlrSF","2ndFlrSF","LowQualFinSF","GrLivArea","BsmtFullBath","BsmtHalfBath","FullBath","HalfBath","BedroomAbvGr","KitchenAbvGr","KitchenQual","TotRmsAbvGrd","Functional","Fireplaces","FireplaceQu","GarageType","GarageYrBlt","GarageFinish","GarageCars","GarageArea","GarageQual","GarageCond","PavedDrive","WoodDeckSF","OpenPorchSF","EnclosedPorch","3SsnPorch","ScreenPorch","PoolArea","PoolQC","Fence","MiscFeature","MiscVal","MoSold","YrSold","SaleType","SaleCondition","SalePrice"]
+		df = to_pd(ts.data)
+		columns = list(df.columns)[1:]
 		return render(request,'main/index.html',{'credits':credit.credits,'cols':columns})
 	else:
 		return HttpResponse("Not Logged IN")
@@ -324,6 +335,7 @@ def Index(request):
 			dat.user = request.user
 			dat.data = df.to_string()
 			dat.save()
+			create_log(request.user,"Intialized.")
 			return HttpResponseRedirect('/start')
 		else:
 			return HttpResponseRedirect('/start')
@@ -341,6 +353,7 @@ def View_1(request):
 		df,credits = append_data(df,int(low),int(high),credits)
 		ts.data = df.to_string()
 		cr.credits = credits
+		create_log(request.user,["view_1","Added Data"])
 		ts.save()
 		cr.save()
 		dic = {}
@@ -369,6 +382,7 @@ def View_2(request):
 			credits = check_null(df,input_val,credits)
 			store = int(df.isna().any().sum())
 		
+		create_log(request.user,["view_1",input_val, col, "Added Data"])
 		ts.data = df.to_string()
 		cr.credits = credits
 		ts.save()
@@ -393,6 +407,7 @@ def View_3(request):
 		ts.data = df.to_string()
 		cr.credits = credits
 		ts.save()
+		create_log(request.user,["view_1",input_val, col, "Added Data"])
 		cr.save()
 		dic = {}
 		dic['credit'] = credits
@@ -415,6 +430,7 @@ def View_4(request):
 		ts.save()
 		cr.save()
 		
+		create_log(request.user,["view_1",input_val, col, "Added Data"])
 		dic = {}
 		dic['credit'] = credits
 		dic['message'] = "Successful."
@@ -429,6 +445,7 @@ def View_5(request):
 		credits = cr.credits
 		df = to_pd(ts.data)
 		graph , credits = null_graph(df,credits,input_val)
+		create_log(request.user,["view_1",input_val,"Added Data"])
 		ts.data = df.to_string()
 		cr.credits = credits
 		ts.save()
@@ -449,6 +466,7 @@ def View_6(request):
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
+		create_log(request.user,["view_1",input_val,col,"Added Data"])
 		df,credits = fill_null(df,credits,input_val,col)
 		ts.data = df.to_string()
 		cr.credits = credits
@@ -467,6 +485,7 @@ def View_7(request):
 		credits = cr.credits
 		df = to_pd(ts.data)
 		df,credits = drop_col(df,credits,col)
+		create_log(request.user,["view_1",col,"Added Data"])
 		ts.data = df.to_string()
 		cr.credits = credits
 		ts.save()
@@ -486,6 +505,7 @@ def View_8(request):
 		df,credits = drop_r(df,credits,input_val)
 		ts.data = df.to_string()
 		cr.credits = credits
+		create_log(request.user,["view_1",input_val,col,"Added Data"])
 		ts.save()
 		cr.save()
 		dic = {}
@@ -500,32 +520,46 @@ def View_9(request):
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
-		credits = credits - 5*input_val
-		X_train,Y_train = convert_to_matrix(df[0:input_val],test = False)
-		X_test = convert_to_matrix(df[1000:],test = True)
-		true_pred = df['SalePrice']
-		true_pred = pd.DataFrame(true_pred)
-		true_pred = true_pred[1000:]
-		true_pred = true_pred.values
-		free_service = ts.free_service
-		test_store = ts.test_store
-		Y_test,train_y,credits, free_service = model_type(X_train,Y_train,X_test,credits,free_service)
-		test_acc = accuracy(Y_test,true_pred)
-		train_acc = accuracy(train_y,Y_train)
-		ts.data = df.to_string()
-		test_store = test_acc
-		ts.free_service = free_service
-		ts.test_store = test_store
-		cr.credits = credits
-		ts.save()
-		cr.save()
-		dic = {}
-		dic['credit'] = credits
-		dic['message'] = "Successful."
-		dic['acc_test'] = test_acc
-		dic['acc_train'] = train_acc
-		dic['c']= free_service
-		return HttpResponse(json.dumps(dic))
+		create_log(request.user,["view_1","Added Data"])
+
+		if(df.isnull().values.any()):
+			ts.data = df.to_string()
+			cr.credits = credits
+			ts.save()
+			cr.save()
+			dicr = {}
+			dicr['message'] = "NULL VALUES ARE STILL THERE"
+			dicr['credit'] = credits
+			dicr['acc_train'] = "RETRY"
+			dicr['c']= "TRY AGAIN"
+			return HttpResponse(json.dumps(dicr))
+		else:
+			credits = credits - 5*input_val
+			X_train,Y_train = convert_to_matrix(df[0:input_val],test = False)
+			X_test = convert_to_matrix(df[1000:],test = True)
+			true_pred = df['SalePrice']
+			true_pred = pd.DataFrame(true_pred)
+			true_pred = true_pred[1000:]
+			true_pred = true_pred.values
+			free_service = ts.free_service
+			test_store = ts.test_store
+			Y_test,train_y,credits, free_service = model_type(X_train,Y_train,X_test,credits,free_service)
+			test_acc = accuracy(Y_test,true_pred)
+			train_acc = accuracy(train_y,Y_train)
+			ts.data = df.to_string()
+			test_store = test_acc
+			ts.free_service = free_service
+			ts.test_store = test_store
+			cr.credits = credits
+			ts.save()
+			cr.save()
+			dic = {}
+			dic['credit'] = credits
+			dic['message'] = "Successful."
+			dic['acc_test'] = test_acc
+			dic['acc_train'] = train_acc
+			dic['c']= free_service
+			return HttpResponse(json.dumps(dic))
 
 def c_p(request):
 	if request.method=="POST":

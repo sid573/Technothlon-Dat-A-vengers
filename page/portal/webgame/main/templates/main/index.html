@@ -19,21 +19,24 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 
 </div>
 <!-- Navigation Bar -->
-<div class="w3-bar w3-white w3-border-bottom w3-xlarge">
-  <button class="w3-bar-item w3-button tablink" ><i class="fa fa-plane w3-margin-right"></i>Credit  </button><div id="creditse">{{credits}}</div>
+<div style="color: white ">
+  <input  class="w3-bar-item w3-button tablink" ><i ></i><h1><b>CREDITS :</b></h1> </button><div id="creditse"><i ></i><h3><b>{{credits}}</b></h3></div>
 
 </div>
+<br>
+<br>
+<br>
 
 <div class="w3-bar w3-white w3-border-bottom w3-xlarge">
     
-      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Null Values');"><i class="fa fa-plane w3-margin-right"></i>Null Values</button>
-      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Normalization');"><i class="fa fa-plane w3-margin-right"></i>Normalization</button>
-      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Data Visualization');"><i class="fa fa-plane w3-margin-right"></i>Data Visualization</button>
-      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Missing Number Visualization');"><i class="fa fa-plane w3-margin-right"></i>Missing Number Visualization</button>
-      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Fill Null Values');"><i class="fa fa-plane w3-margin-right"></i>Fill Null Values</button>
-      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Drop Column');"><i class="fa fa-plane w3-margin-right"></i>Drop Column</button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Null Values');"><i class="fa fa-plane w3-margin-right"></i><B>NULL CHECKER</B></button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Normalization');"><i class="fa fa-plane w3-margin-right"></i><b>NORMALIZATION</b></button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Data Visualization');"><i class="fa fa-plane w3-margin-right"></i><b>DATA VISUALIZATION</b></button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Missing Number Visualization');"><i class="fa fa-plane w3-margin-right"></i><b>MISSING NUMBER VISUALIZATION</b></button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Fill Null Values');"><i class="fa fa-plane w3-margin-right"></i><b>FILL MISSING/NULL VALUES</b></button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Drop Column');"><i class="fa fa-plane w3-margin-right"></i><b>DROP A COLUMN</b></button>
       
-      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'LinearReg');"><i class="fa fa-plane w3-margin-right"></i>Linear Regression</button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'LinearReg');"><i class="fa fa-plane w3-margin-right"></i><b>LINEAR REGRESSION</b></button>
 </div>
 
 <!-- Header -->
@@ -49,7 +52,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 <!--............................................................................................................. -->
 
     <div id="Null Values" class="w3-container w3-white w3-padding-16 myLink">
-      <h3>Want to check Null? </h3>
+      <h3>WELCOME TO NULL CHECKER , CHOOSE HOW YOU WANT TO CHECK NULL !!! </h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-half">
           <label>From</label>
@@ -72,7 +75,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       </form>
         </div>
       </div>
-      <p><button class="w3-button w3-dark-grey" onclick="view2();">Go Bro...</button></p>
+      <p><button id="bt1" class="w3-button w3-dark-grey" onclick="view2();">Go Bro...</button></p>
     </div>
 <!--............................................................................................................. -->
 
@@ -100,7 +103,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       </form>
         </div>
       </div>
-      <p><button class="w3-button w3-dark-grey" onclick="view3();">Go Bro...</button></p>
+      <p><button id="bt2" class="w3-button w3-dark-grey" onclick="view3();">Go Bro...</button></p>
     </div>
 <!--............................................................................................................. -->
 
@@ -127,7 +130,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       </form>
         </div>
       </div>
-      <p><button class="w3-button w3-dark-grey"  onclick="view4();" >Go Bro...</button></p>
+      <p><button id="bt3" class="w3-button w3-dark-grey"  onclick="view4();" >Go Bro...</button></p>
     </div>
 <!--............................................................................................................. -->
 
@@ -146,7 +149,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       </form>
         </div>
       </div>
-      <p><button class="w3-button w3-dark-grey"  onclick="view5();" >Go Bro...</button></p>
+      <p><button id="bt4" class="w3-button w3-dark-grey"  onclick="view5();" >Go Bro...</button></p>
     </div>
 <!--............................................................................................................. -->
 
@@ -174,7 +177,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       </form>
         </div>
       </div>
-      <p><button class="w3-button w3-dark-grey" onclick="view6();">Go Bro...</button></p>
+      <p><button id="bt5" class="w3-button w3-dark-grey" onclick="view6();">Go Bro...</button></p>
     </div>
 <!--............................................................................................................. -->
 
@@ -196,7 +199,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       </form>
         </div>
       </div>
-      <p><button class="w3-button w3-dark-grey" onclick="view7();">Drop</button></p>
+      <p><button id="bt6" class="w3-button w3-dark-grey" onclick="view7();">Drop</button></p>
     </div>
 <!--............................................................................................................. -->
 
@@ -210,15 +213,15 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
           <input class="w3-input w3-border" type="text" id="nr" placeholder="Lower Value">
         </div>
       </div>
-      <p><button class="w3-button w3-dark-grey"  onclick="view9();">GO</button></p>
+      <p><button id="bt7" class="w3-button w3-dark-grey"  onclick="view9();">GO</button></p>
     </div>
 <!-- ------------------------------------------------------------------------------------------------------------ -->
 </header>
 
 <div>
-  <p><button class="w3-button w3-dark-grey" onclick="cp();"><b>CHECKPOINT</b></button></p>
-  <p><button class="w3-button w3-dark-grey" onclick="cpr();"><b>REVERT</b></button></p>
-  <p><button class="w3-button w3-dark-grey" onclick="test();"><b>TEST ACCURACY</b></button></p>
+  <p><button class="w3-button w3-dark-grey" onclick="cp();"  id="bt8"><b>CHECKPOINT</b></button></p>
+  <p><button class="w3-button w3-dark-grey" onclick="cpr();" id="bt9"><b>REVERT</b></button></p>
+  <p><button class="w3-button w3-dark-grey" onclick="test();" id="bt10"><b>TEST ACCURACY</b></button></p>
   <br>
   <br>
   <div id="texta">
@@ -299,6 +302,49 @@ function isJson(item) {
 
     return false;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////
+    $('#bt1').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+    $('#bt2').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+    $('#bt3').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+    $('#bt4').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+    $('#bt5').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+    $('#bt6').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+    $('#bt7').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+    $('#bt8').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+    $('#bt9').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+    $('#bt10').click(function() {
+        $(this).attr('disabled','disabled');
+        
+    });
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 // var xzz;
 function view2(){
@@ -327,10 +373,12 @@ function view2(){
           }
           else{
             
-              $("#texta").html('<p style="color:white;">'+xm["data"]+'</p>');
+              //$("#texta").html('<p style="color:white;">'+xm["data"]+'</p>');
+              alert("YOUR REQUESTED RESPONSE :"+xm["data"])
           }
 
           alert(xm["message"]);
+          $('#bt1').attr("disabled", false);
       }
   });
 }
@@ -346,6 +394,7 @@ function view3(){
             $("#creditse").html(xm['credit']);
           }
           alert(xm["message"]);
+          $('#bt2').attr("disabled", false);
       }
   });
 }
@@ -368,7 +417,7 @@ function view4(){
           var img = new Image();
           img.src = pre+resp;
           $("#imgbox").html(img);
-          
+          $('#bt3').attr("disabled", false);
       }
   });
 }
@@ -390,6 +439,7 @@ function view5(){
            var img = new Image();
            img.src = pre+resp;
            $("#imgbox").html(img);
+           $('#bt4').attr("disabled", false);
       }
   });
 }
@@ -405,6 +455,7 @@ function view6(){
             $("#creditse").html(xz['credit']);
           }
           alert("Status: " + xz["message"]);
+          $('#bt5').attr("disabled", false);
       }
   });
 }
@@ -420,6 +471,7 @@ function view7(){
             $("#creditse").html(xz['credit']);
           }
           alert("Status: " + xz["message"]);
+          $('#bt6').attr("disabled", false);
       }
   });
 }
@@ -439,6 +491,7 @@ function view9(){
           //alert(xz["acc_test"]);
           alert(xz["acc_train"]);
           alert(xz["c"]);
+          $('#bt7').attr("disabled", false);
         
       }
   });
@@ -455,6 +508,7 @@ function cp(){
             $("#creditse").html(xz['credit']);
           }
           alert("Status: " + xz["message"]);
+          $('#bt8').attr("disabled", false);
       }
   });
 }
@@ -471,6 +525,7 @@ function cpr(){
             $("#creditse").html(xz['credit']);
           }
           alert("Status: " + xz["message"]);
+          $('#bt9').attr("disabled", false);
       }
   });
 }
@@ -489,6 +544,7 @@ function test(){
           alert("Status: " + xz["message"]);
           alert(xz["test_acc"])
           alert(xz["test_num"])
+          $('#bt10').attr("disabled", false);
       }
   });
 }
