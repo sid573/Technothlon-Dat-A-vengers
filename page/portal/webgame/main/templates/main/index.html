@@ -26,8 +26,8 @@ a:hover {
 
 </div>
 <div style="color: white ">
-  <button  class="w3-bar-item w3-button tablink"  id="creditse"><i ></i><h1><b>CREDITS : {{credits}}</b></h1>  
-  </button>
+  <i ></i><h1><b>CREDITS : <button  class="w3-bar-item w3-button tablink"  id="creditse">{{credits}}  
+  </button></b></h1>
 
 <div class="w3-bar w3-yellow w3-border-bottom w3-xlarge">
     
@@ -224,7 +224,7 @@ a:hover {
 <div>
   <p><button class="w3-button w3-dark-grey" onclick="cp();"  id="bt8"><b>CHECKPOINT</b></button></p>
   <p><button class="w3-button w3-dark-grey" onclick="cpr();" id="bt9"><b>REVERT</b></button></p>
-  <p><button class="w3-button w3-dark-grey" onclick="test();" id="bt10"><b>TEST ACCURACY (3 TIMES)</b></button></p>
+  <p><button class="w3-button w3-dark-grey" onclick="test();" id="bt10"><b>TEST ACCURACY (11 TIMES)</b></button></p>
   <br>
   <br>
   <div id="texta">
@@ -555,9 +555,10 @@ function test(){
             $("#creditse").html(xz['credit']);
           }
 
+
           alert("Status: " + xz["message"]);
-          alert(xz["test_acc"])
-          alert(xz["test_num"])
+          alert("Test ACCURACY: " + xz["test_acc"])
+          alert("Number of times tested:" + xz["test_num"])
           $('#bt10').attr("disabled", false);
       }
   });

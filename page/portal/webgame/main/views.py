@@ -658,9 +658,13 @@ def Test_acc(request):
 	test_store =  ts.test_store
 	test_cal = ts.test_cal
 	test_cal = test_cal + 1
+	dic = {}
+	if(test_cal<12 and test_cal>7):
+		cr.credits = cr.credits - 5000
+		cr.save()
+		dic['credit'] = cr.credits
 	ts.test_cal = test_cal
 	ts.save()
-	dic = {}
 	dicr = {}
 	dic['test_acc'] = test_store
 	dic['test_num'] = test_cal
@@ -670,7 +674,7 @@ def Test_acc(request):
 	dicr['message'] = "SORRY YOU HAVE EXCEEDED YOUR LIMITS"
 	
 	
-	if(test_cal < 4):
+	if(test_cal < 12):
 		return HttpResponse(json.dumps(dic))
 	else:
 		return HttpResponse(json.dumps(dicr))
