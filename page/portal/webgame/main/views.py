@@ -330,7 +330,7 @@ def createUsers(request):
 	rollNos=["H"+str(x) for x in range(1,44)]
 	if request.user.is_authenticated:
 		for r in rollNos:
-			#passwd=''.join(random.choices(string.ascii_lowercase + string.digits, k=4))
+			passwd=''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
 			# user,created = User.objects.get_or_create(username=str(r),email=str(r), password=passwd)
 			#if(created):
 			#	resp += "Created: "+str(r) + " :\t"+ passwd
@@ -338,18 +338,21 @@ def createUsers(request):
 			#	resp += "Already exists: "+str(r)
 			#resp+="\n"
 			user = User.objects.filter(username=r).first()
-		
-			data = TableSet.objects.filter(user=user).first()
-			if data is None:
-				df = load_data_init_train()
-				cre = Credits()
-				cre.user = user
-				cre.save()
-				dat = TableSet()
-				dat.user = user
-				dat.data = df.to_string()
-				dat.save()
-				create_log(user,"Intialized.")
+			user.set_password(passwd)
+			resp+=r+" "+passwd
+			resp+="<br>"
+			user.save()		
+			# data = TableSet.objects.filter(user=user).first()
+			# if data is None:
+			# 	df = load_data_init_train()
+			# 	cre = Credits()
+			# 	cre.user = user
+			# 	cre.save()
+			# 	dat = TableSet()
+			# 	dat.user = user
+			# 	dat.data = df.to_string()
+			# 	dat.save()
+			# 	create_log(user,"Intialized.")
 		return HttpResponse(resp)
 	else:
 		return HttpResponse("Not Logged IN")
