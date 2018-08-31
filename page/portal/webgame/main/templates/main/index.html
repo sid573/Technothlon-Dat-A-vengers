@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<title> WELCOME </title>
+<title> TECHNOTHLON </title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/static/w3.css">
@@ -11,23 +11,25 @@
 <style>
 body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 .myLink {display: none}
+
+a:hover {
+    background-color: white;
+}
 </style>
 <body  bgcolor="black">
 
-<div class="w3-bar w3-white w3-border-bottom w3-xlarge" align="center">
+<div class="w3-bar w3-white w3-border-bottom w3-xlarge" align="center" style="font-size: x-large;">
   <h1> <b>  DAT-A-VENGERS </b></h1>
 
 </div>
 <!-- Navigation Bar -->
-<div style="color: white ">
-  <input  class="w3-bar-item w3-button tablink" ><i ></i><h1><b>CREDITS :</b></h1> </button><div id="creditse"><i ></i><h3><b>{{credits}}</b></h3></div>
 
 </div>
-<br>
-<br>
-<br>
+<div style="color: white ">
+  <button  class="w3-bar-item w3-button tablink"  id="creditse"><i ></i><h1><b>CREDITS : {{credits}}</b></h1>  
+  </button>
 
-<div class="w3-bar w3-white w3-border-bottom w3-xlarge">
+<div class="w3-bar w3-yellow w3-border-bottom w3-xlarge">
     
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Null Values');"><i class="fa fa-plane w3-margin-right"></i><B>NULL CHECKER</B></button>
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Normalization');"><i class="fa fa-plane w3-margin-right"></i><b>NORMALIZATION</b></button>
@@ -37,6 +39,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Drop Column');"><i class="fa fa-plane w3-margin-right"></i><b>DROP A COLUMN</b></button>
       
       <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'LinearReg');"><i class="fa fa-plane w3-margin-right"></i><b>LINEAR REGRESSION</b></button>
+      <p align="right"><h2><b><a href="/static/techno.pdf" >HELP</a></b></h2></p>
 </div>
 
 <!-- Header -->
@@ -55,7 +58,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <h3>WELCOME TO NULL CHECKER , CHOOSE HOW YOU WANT TO CHECK NULL !!! </h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-half">
-          <label>From</label>
+          <label>Select</label>
                     <form action=""><select name="null_val" id="null_value" onchange= "showDiv(this);">
              <option value="columns_null">Shows Columns that has Null </option>
              <option value="total_null">Number of Null in Cols</option>
@@ -83,11 +86,11 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <h3>Want to Normalize? </h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-half">
-          <label>From</label>
+          <label>Types of NORMALIZATION</label>
                     <form action="">  <select name="norm" id="norm_l">
-             <option value="1">Mean and Standard Deviation</option>
-             <option value="2">Mean</option>
-             <option value="3">Standard Deviation</option>
+             <option value="1">NORMALIZATION 1</option>
+             <option value="2">NORMALIZATION 2</option>
+             <option value="3">NORMALIZATION 3</option>
             </select>
             <br><br>
       </form>
@@ -111,9 +114,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <h3>Want to Visualize Data ? </h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-half">
-          <label>From</label>
+          <label>Select</label>
                     <form action="">  <select name="graph" id="data_graph">
-             <option value="1">Line</option>
+             <option value="1">Line Graph</option>
              <option value="2">Histogram</option>
             </select>
             <br><br>
@@ -138,7 +141,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <h3>Want to Visualize Missing Data ? </h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-half">
-          <label>From</label>
+          <label>Select</label>
                     <form action="">  <select name="graph" id="missing_data_graph">
              <option value="1">Matrix</option>
              <option value="2">Heatmap</option>
@@ -157,7 +160,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
       <h3>Want to Fill Null Values? </h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-half">
-          <label>From</label>
+          <label>Select which to fill</label>
                     <form action="">  <select name="Fill" id="Fill_null">
              <option value="1">Mean</option>
              <option value="2">Zero</option>
@@ -206,10 +209,10 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
     
 <!-- ----------------------------------------------------------------------------------------------------------- -->
     <div id="LinearReg" class="w3-container w3-white w3-padding-16 myLink">
-      <h3> Finalizing </h3>
+      <h3> Training acccuracy checker!!! </h3>
       <div class="w3-row-padding" style="margin:0 -16px;">
         <div class="w3-half">
-          <label>From</label>
+          <label>Number of Rows <b>(MAXIMUM : 1000)</b></label>
           <input class="w3-input w3-border" type="text" id="nr" placeholder="Lower Value">
         </div>
       </div>
@@ -221,7 +224,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 <div>
   <p><button class="w3-button w3-dark-grey" onclick="cp();"  id="bt8"><b>CHECKPOINT</b></button></p>
   <p><button class="w3-button w3-dark-grey" onclick="cpr();" id="bt9"><b>REVERT</b></button></p>
-  <p><button class="w3-button w3-dark-grey" onclick="test();" id="bt10"><b>TEST ACCURACY</b></button></p>
+  <p><button class="w3-button w3-dark-grey" onclick="test();" id="bt10"><b>TEST ACCURACY (3 TIMES)</b></button></p>
   <br>
   <br>
   <div id="texta">
@@ -247,7 +250,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
 
 <!-- Footer -->
 <footer class="w3-container w3-center w3-opacity w3-white w3-margin-bottom">
-  <h1> <b> WHAT GETS MEASURED , GETS MANAGED !!!</b></h1>
+  <h1> <b> IN GOD WE MUST TRUST ,  ALL OTHERS MUST BRING DATA!!!</b></h1>
   <div class="w3-xlarge w3-padding-16">
     
   </div>
@@ -266,7 +269,7 @@ function openLink(evt, linkName) {
       tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
   }
   document.getElementById(linkName).style.display = "block";
-  evt.currentTarget.className += " w3-red";
+  evt.currentTarget.className += " w3-yellow";
 }
 // Click on the first tablink on load
 document.getElementsByClassName("tablink")[0].click();
@@ -305,42 +308,51 @@ function isJson(item) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
     $('#bt1').click(function() {
         $(this).attr('disabled','disabled');
-        
+        $('#texta').empty();
     });
     $('#bt2').click(function() {
         $(this).attr('disabled','disabled');
+        $('#texta').empty();
         
     });
     $('#bt3').click(function() {
         $(this).attr('disabled','disabled');
+        $('#texta').empty();
         
     });
     $('#bt4').click(function() {
         $(this).attr('disabled','disabled');
+        $('#texta').empty();
         
     });
     $('#bt5').click(function() {
         $(this).attr('disabled','disabled');
+        $('#texta').empty();
         
     });
     $('#bt6').click(function() {
         $(this).attr('disabled','disabled');
+        $('#texta').empty();
         
     });
     $('#bt7').click(function() {
         $(this).attr('disabled','disabled');
+        $('#texta').empty();
         
     });
     $('#bt8').click(function() {
         $(this).attr('disabled','disabled');
+        $('#texta').empty();
         
     });
     $('#bt9').click(function() {
         $(this).attr('disabled','disabled');
+        $('#texta').empty();
         
     });
     $('#bt10').click(function() {
         $(this).attr('disabled','disabled');
+        $('#texta').empty();
         
     });
 
@@ -348,6 +360,7 @@ function isJson(item) {
 
 // var xzz;
 function view2(){
+
   $.ajax({
       type: "POST",
       url: "/view_2",
@@ -472,6 +485,7 @@ function view7(){
           }
           alert("Status: " + xz["message"]);
           $('#bt6').attr("disabled", false);
+          location.reload();
       }
   });
 }

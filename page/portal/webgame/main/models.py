@@ -13,7 +13,7 @@ class TableSet(models.Model):
 
 class Credits(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	credits = models.IntegerField(default=1000000)
+	credits = models.IntegerField(default=75000)
 
 class Logs(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)

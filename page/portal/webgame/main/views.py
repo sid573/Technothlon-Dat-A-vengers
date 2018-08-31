@@ -181,7 +181,9 @@ def bar2(df,credits):
 def null_graph(df,credits,input_val):
 	""" Which Missing No Grpah to Call """
 	# Graphs are Sexy but are not very Sizzling Hot #
-
+	plt.clf()
+	plt.cla()
+	plt.close()
 	if(input_val == 1):
 		pl,credits = matrix2(df,credits)
 	elif(input_val == 2):
@@ -407,6 +409,7 @@ def View_3(request):
 		ts.data = df.to_string()
 		cr.credits = credits
 		ts.save()
+		input_val = str(input_val)
 		create_log(request.user,["view_1",input_val, col, "Added Data"])
 		cr.save()
 		dic = {}
@@ -429,7 +432,7 @@ def View_4(request):
 		cr.credits = credits
 		ts.save()
 		cr.save()
-		
+		input_val = str(input_val)
 		create_log(request.user,["view_1",input_val, col, "Added Data"])
 		dic = {}
 		dic['credit'] = credits
@@ -445,6 +448,7 @@ def View_5(request):
 		credits = cr.credits
 		df = to_pd(ts.data)
 		graph , credits = null_graph(df,credits,input_val)
+		input_val = str(input_val)
 		create_log(request.user,["view_1",input_val,"Added Data"])
 		ts.data = df.to_string()
 		cr.credits = credits
@@ -466,10 +470,12 @@ def View_6(request):
 		cr = Credits.objects.filter(user=request.user.id).first()
 		credits = cr.credits
 		df = to_pd(ts.data)
-		create_log(request.user,["view_1",input_val,col,"Added Data"])
+		
 		df,credits = fill_null(df,credits,input_val,col)
 		ts.data = df.to_string()
 		cr.credits = credits
+		input_val = str(input_val)
+		create_log(request.user,["view_1",input_val,col,"Added Data"])
 		ts.save()
 		cr.save()
 		dic = {}
