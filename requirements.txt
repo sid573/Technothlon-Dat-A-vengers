@@ -1,2 +1,7 @@
 numpy
 missingno
+matplotlib
+pandas
+sklearn
+django
+sqlitebrowser
